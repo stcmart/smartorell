@@ -72,7 +72,30 @@ document.getElementById("searchButton").addEventListener("click", function() {
 fetch('./data/senyalitzacio.geojson')
     .then(response => response.json())
     .then(geojsonFeature => {
-        const senyalitzacioLayer = L.geoJSON(geojsonFeature).addTo(map);
+        const senyalitzacioLayer = L.geoJSON(geojsonFeature, {
+
+            pointToLayer: function (feature, latlng) {
+
+                const comentari = feature.properties.comentari;
+
+                let color = 'gray';
+
+                if (comentari === 'Tancament del gual inundable') {
+                    color = 'red';
+                } else if (comentari === 'Prohibició parking risc inundació') {
+                    color = 'orange';
+                } 
+                
+                return L.circleMarker(latlng, {
+                    radius: 8,
+                    fillColor: color,
+                    color: '#ffffff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                });
+            }
+            }).addTo(map);
     })
     .catch(error => {
         console.error('Error carregant el GeoJSON:', error);
