@@ -69,7 +69,7 @@ document.getElementById("searchButton").addEventListener("click", function() {
 
 /* Add temp senyalització */
 
-fetch('../data/senyalitzacio.geojson')
+fetch('./data/senyalitzacio.geojson')
     .then(response => response.json())
     .then(geojsonFeature => {
         const senyalitzacioLayer = L.geoJSON(geojsonFeature).addTo(map);
