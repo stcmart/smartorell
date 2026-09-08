@@ -6,7 +6,7 @@ const supabaseClient = window.supabase.createClient(
     SUPABASE_KEY
 );
 
-const form = document.querySelector(".login-form");
+const form = document.querySelector("#login-form");
 
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
