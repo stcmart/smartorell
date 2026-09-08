@@ -2,10 +2,55 @@
 <html lang="ca">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=auth/login.html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carregant...</title>
 </head>
 
 <body>
+
+    <div class="splash-screen">
+        <img src="assets/logo_blanc.png" alt="Logo">
+        <p>Carregant...</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        const SUPABASE_URL = "https://zfhkelulfbnotagrlenl.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_TTrqEFYf1bjHlrAJrvo7QQ_qF-8AjIl";
+
+        const supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+        async function iniciarWebapp() {
+
+            // Comprovar si hi ha una sessió activa
+            const { data, error } = await supabaseClient.auth.getSession();
+
+            if (error) {
+                console.error("Error comprovant la sessió:", error);
+            }
+
+            const session = data?.session;
+
+            // Esperem com a mínim 5 segons
+            setTimeout(() => {
+
+                if (session) {
+                    // Ja està loguejat
+                    window.location.href = "app.html";
+                } else {
+                    // No està loguejat
+                    window.location.href = "auth/login.html";
+                }
+
+            }, 5000);
+        }
+
+        iniciarWebapp();
+    </script>
+
 </body>
 </html>
