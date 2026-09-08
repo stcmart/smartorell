@@ -9,15 +9,17 @@ const supabaseClient = window.supabase.createClient(
 const form = document.querySelector("#login-form");
 
 form.addEventListener("submit", async (event) => {
+
     event.preventDefault();
 
     const email = document.querySelector("#email").value;
     const password = document.querySelector("#password").value;
 
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-    });
+    const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        });
 
     if (error) {
         console.error(error);
@@ -27,9 +29,5 @@ form.addEventListener("submit", async (event) => {
 
     console.log("Usuari autenticat:", data.user);
 
-    // Aquí pots redirigir a la pàgina principal
-    window.location.href = "index.html";
+    window.location.href = "./app.html";
 });
-
-console.log("login.js carregat");
-console.log("Supabase:", window.supabase);
