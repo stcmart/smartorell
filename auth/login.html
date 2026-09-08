@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Inicia sessió</title>
+    <link rel="stylesheet" href="../static/css/login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <main class="login-container">
+        <div class="login-image"></div>
+        <div class="login-form">
+            <div class="brand">
+                <img src="/assets/logo_blanc.png" alt="Logo">
+                <h2>/ Serveis municipals i<br> via pública</h2>
+            </div>
+            <h1>Benvinguts</h1>
+
+            <label for="email">Correu electrònic</label>
+            <input type="email" id="email" name="email" placeholder="Introdueix el teu correu" required>
+
+            <label for="password">Contrasenya</label>
+            <input type="password" id="password" name="password" placeholder="Introdueix la teva contrasenya" required>
+
+            <button type="submit" class="login-button">Inicia sessió</button>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="login.js"></script>
+</body>
+</html>
