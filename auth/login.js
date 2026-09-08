@@ -30,3 +30,6 @@ form.addEventListener("submit", async (event) => {
     // Aquí pots redirigir a la pàgina principal
     window.location.href = "index.html";
 });
+
+console.log("login.js carregat");
+console.log("Supabase:", window.supabase);
