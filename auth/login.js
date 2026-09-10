@@ -23,5 +23,5 @@ form.addEventListener("submit", async (event) => {
 
     console.log("Usuari autenticat:", data.user);
 
-    window.location.href = "./app.html";
+    window.location.href = "../app.html";
 });

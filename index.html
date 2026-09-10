@@ -13,9 +13,9 @@
         <p>Carregant...</p>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
+    <script type="module">
         
-        import { supabaseClient } from './supabase.js';
+        import { supabaseClient } from './auth/supabase.js';
 
         async function iniciarWebapp() {
 
@@ -30,7 +30,7 @@
             setTimeout(() => {
 
                 if (session) {
-                    window.location.href = "app.html";
+                    window.location.href = "./app.html";
                 } else {
                     window.location.href = "./auth/login.html";
                 }
