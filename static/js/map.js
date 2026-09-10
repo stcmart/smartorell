@@ -20,14 +20,20 @@ function crearPopup(feature) {
         return "Sense informació";
     }
 
-    let html =`<div class="popup-content">`;
+    let html = `<div class="popup-content">`;
 
     for (const key in feature.properties) {
+
         const value = feature.properties[key];
-        html += `<div> <strong> ${key} </strong>: ${value ?? ""} </div>`;
+
+        html += `
+            <div>
+                <strong>${key}</strong>: ${value ?? ""}
+            </div>
+        `;
     }
 
-    html += "</div>";
+    html += `</div>`;
 
     return html;
 }

@@ -26,7 +26,6 @@ async function loadNetworks() {
     }
 }
 
-
 function renderNetworks(networks) {
 
     console.log("renderNetworks()", networks);
@@ -102,6 +101,5 @@ function formatName(name) {
         .replace(/\b\w/g, letter => letter.toUpperCase());
 
 }
-
 
 loadNetworks();
