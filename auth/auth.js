@@ -1,10 +1,4 @@
-const SUPABASE_URL = "https://zfhkelulfbnotagrlenl.supabase.co";
-const SUPABASE_KEY = "sb_publishable_TTrqEFYf1bjHlrAJrvo7QQ_qF-8AjIl";
-
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+import { supabaseClient } from './supabase.js';
 
 async function checkAuth() {
 
@@ -13,12 +7,12 @@ async function checkAuth() {
 
     if (error) {
         console.error(error);
-        window.location.href = "auth/login.html";
+        window.location.href = "/auth/login.html";
         return;
     }
 
     if (!data.session) {
-        window.location.href = "auth/login.html";
+        window.location.href = "/auth/login.html";
         return;
     }
 

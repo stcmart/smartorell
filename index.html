@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carregant...</title>
+    <title>SMartorell</title>
 </head>
 
 <body>
@@ -12,21 +12,13 @@
         <img src="assets/logo_blanc.png" alt="Logo">
         <p>Carregant...</p>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script>
-        const SUPABASE_URL = "https://zfhkelulfbnotagrlenl.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_TTrqEFYf1bjHlrAJrvo7QQ_qF-8AjIl";
-
-        const supabaseClient = window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY
-        );
+        
+        import { supabaseClient } from './supabase.js';
 
         async function iniciarWebapp() {
 
-            // Comprovar si hi ha una sessió activa
             const { data, error } = await supabaseClient.auth.getSession();
 
             if (error) {
@@ -35,18 +27,15 @@
 
             const session = data?.session;
 
-            // Esperem com a mínim 5 segons
             setTimeout(() => {
 
                 if (session) {
-                    // Ja està loguejat
                     window.location.href = "app.html";
                 } else {
-                    // No està loguejat
-                    window.location.href = "auth/login.html";
+                    window.location.href = "./auth/login.html";
                 }
 
-            }, 5000);
+            }, 3000);
         }
 
         iniciarWebapp();
