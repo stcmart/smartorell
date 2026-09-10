@@ -1,10 +1,4 @@
-const SUPABASE_URL = "https://zfhkelulfbnotagrlenl.supabase.co";
-const SUPABASE_KEY = "sb_publishable_TTrqEFYf1bjHlrAJrvo7QQ_qF-8AjIl";
-
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+import { supabaseClient } from './supabase.js';
 
 const form = document.querySelector("#login-form");
 
@@ -29,5 +23,5 @@ form.addEventListener("submit", async (event) => {
 
     console.log("Usuari autenticat:", data.user);
 
-    window.location.href = "../app.html";
+    window.location.href = "./app.html";
 });
