@@ -9,8 +9,21 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #F0F5E0;
+    background: #EEF1EA;
     font-family: 'Manrope', Arial, Helvetica, sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+body::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    aspect-ratio: 2172 / 724;
+    background: url("../../assets/background.svg") center bottom / 100% 100% no-repeat;
+    z-index: -1;
 }
 
 .login-container {
@@ -21,6 +34,8 @@ body {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.20);
+    position: relative;
+    z-index: 1;
 }
 
 .login-image {
@@ -60,13 +75,13 @@ body {
 .login-form h1 {
     font-size: 32px;
     margin-bottom: 35px;
-    font-family: 'Inter Tight';
+    font-family: 'Inter Tight', Arial, Helvetica, sans-serif;
     font-weight: 800;
 }
 
 .login-form label {
     display: block;
-    font-family: 'Inter tight';
+    font-family: 'Inter Tight', Arial, Helvetica, sans-serif;
     font-size: 15px;
     font-weight: bold;
     margin-bottom: 8px;
@@ -104,8 +119,9 @@ body {
 .login-button:hover {
     background: #444;
 }
-        
+
 @media (max-width: 750px) {
+
     .login-container {
         width: 90%;
         min-height: auto;
