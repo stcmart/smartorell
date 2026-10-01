@@ -518,7 +518,6 @@ html, body {
 /* =========================================
    RESPONSIVE
 ========================================= */
-
 @media (max-width: 768px) {
 
     #map {
@@ -529,40 +528,29 @@ html, body {
     }
 
     #sidebar {
-
         top: 12px;
         left: 12px;
-
         width: calc(100% - 24px);
-
-        max-height:
-            calc(100vh - 24px);
-
+        max-height: calc(100vh - 24px);
         border-radius: 20px;
     }
 
-
     .sidebar-toggle {
-
         top: auto;
         bottom: 20px;
 
-        left: auto;
-        right: 20px;
+        left: 20px;
+        right: auto;
 
         width: 52px;
         height: 52px;
 
         border-radius: 50%;
-
         font-size: 34px;
     }
 
-
     .sidebar-toggle.hidden {
-
-        left: auto;
-
-        right: 20px;
+        left: 20px;
+        right: auto;
     }
 }
