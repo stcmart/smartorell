@@ -7,12 +7,12 @@ async function checkAuth() {
 
     if (error) {
         console.error(error);
-        window.location.href = "/auth/login.html";
+        window.location.href = "./auth/login.html";
         return;
     }
 
     if (!data.session) {
-        window.location.href = "/auth/login.html";
+        window.location.href = "./auth/login.html";
         return;
     }
 

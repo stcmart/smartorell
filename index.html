@@ -4,14 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SMartorell</title>
+
+    <link rel="stylesheet" href="./static/css/splash-screen.css"/>
 </head>
 
 <body>
-
+    <div class="background-bottom"></div>
     <div class="splash-screen">
-        <img src="assets/logo_blanc.png" alt="Logo">
-        <p>Carregant...</p>
+        <div class="logo-container">
+            <img
+                src="./assets/logo_blanc.png"
+                alt="SMartorell"
+                class="logo logo-base"
+            >
+            <img
+                src="./assets/logo_blanc.png"
+                alt=""
+                class="logo logo-carregant"
+            >
+        </div>
     </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="module">
         
