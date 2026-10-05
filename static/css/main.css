@@ -414,7 +414,7 @@ html, body {
 }
 
 .sidebar-toggle:hover {
-    background: #f0f4fa;
+    background: #121B28;
 }
 
 
@@ -522,7 +522,7 @@ html, body {
 
     #map {
         width: 100%;
-        height: calc(100vh - 30px);
+        height: 100vh;
         border-radius: 20px;
         background: #101722;
     }
@@ -536,21 +536,24 @@ html, body {
     }
 
     .sidebar-toggle {
+        border-radius:
+        0 18px 18px 0;
         top: auto;
-        bottom: 20px;
+        bottom: 10px;
 
-        left: 20px;
+        left: 0px;
         right: auto;
 
-        width: 52px;
-        height: 52px;
+        width: 35px;
+        height: 35px;
 
-        border-radius: 50%;
-        font-size: 34px;
+        font-size: 25px;
+
+        align-items: center;
     }
 
     .sidebar-toggle.hidden {
-        left: 20px;
+        left: 0px;
         right: auto;
     }
 }
