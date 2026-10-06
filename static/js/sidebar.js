@@ -4,19 +4,23 @@ const sidebar = document.getElementById("sidebar");
 const sidebarToggle = document.getElementById("sidebarToggle");
 
 sidebarToggle.addEventListener("click", function() {
-  sidebar.classList.toggle("hidden");
-  
-  this.classList.toggle("hidden");
-  if (sidebar.classList.contains("hidden")) {
-    this.textContent = "›";
-    this.title = "Mostrar menú";
-  } else {
-    this.textContent = "‹";
-    this.title = "Ocultar menú";
-  }
-  setTimeout(() => map.invalidateSize(), 350);
-  }
-);
+
+    sidebar.classList.toggle("hidden");
+    this.classList.toggle("hidden");
+
+    const icon = this.querySelector(".material-symbols-outlined");
+
+    if (sidebar.classList.contains("hidden")) {
+        icon.textContent = "arrow_forward_ios";
+        this.title = "Mostrar menú";
+    } else {
+        icon.textContent = "arrow_back_ios";
+        this.title = "Ocultar menú";
+    }
+
+    setTimeout(() => map.invalidateSize(), 350);
+
+});
 
 /* Layer button*/
 const layerButton = document.getElementById("layerButton");
