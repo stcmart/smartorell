@@ -6,6 +6,24 @@ L.control.scale({
 
 /* CONTROLS */
 const controls = document.getElementById("mapControls");
+const mapControlsToggle = document.getElementById("mapControlsToggle");
+
+mapControlsToggle.addEventListener("click", () => {
+
+    mapControls.classList.toggle("collapsed");
+
+    const icon = mapControlsToggle.querySelector(
+        ".material-symbols-rounded"
+    );
+
+    if (mapControls.classList.contains("collapsed")) {
+        icon.textContent = "tune";
+        mapControlsToggle.title = "Mostrar controls del mapa";
+    } else {
+        icon.textContent = "close";
+        mapControlsToggle.title = "Ocultar controls del mapa";
+    }
+});
 
 const mapControl = L.control({
     position: "bottomright"
