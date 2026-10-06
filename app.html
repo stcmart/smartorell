@@ -119,11 +119,26 @@
 
     <!-- Controls mapa -->
     <div id="mapControls" class="map-controls">
-        <button id="zoomInButton" class="map-control-button" title="Més zoom"><span class="material-symbols-outlined">zoom_in</span></button>
-        <button id="zoomOutButton" class="map-control-button" title="Menys zoom"><span class="material-symbols-outlined">zoom_out</span></button>
-        <button id="locateButton" class="map-control-button" title="My location"><span class="material-symbols-outlined">my_location</span></button>    
-        <button id="rotateButton" class="map-control-button" title="Rotate"><span class="material-symbols-outlined">move</span></button>
-        <button id="fullscreenButton" class="map-control-button" title="Fullscreen"><span class="material-symbols-outlined">fullscreen</span></button>
+        <div id="mapControlsButtons" class="map-controls-buttons">
+            <button id="zoomInButton">
+                <span class="material-symbols-outlined">add</span>
+            </button>
+            <button id="zoomOutButton">
+                <span class="material-symbols-outlined">remove</span>
+            </button>
+            <button id="fullscreenButton">
+                <span class="material-symbols-outlined">fullscreen</span>
+            </button>
+            <button id="rotateButton">
+                <span class="material-symbols-outlined">explore</span>
+            </button>
+            <button id="locateButton">
+                <span class="material-symbols-outlined">my_location</span>
+            </button>
+        </div>
+        <button id="mapControlsToggle" class="map-controls-toggle">
+            <span class="material-symbols-outlined">keyboard_arrow_down</span>
+        </button>
     </div>
 
     <!-- Leaflet JS -->

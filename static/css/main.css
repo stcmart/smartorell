@@ -442,17 +442,29 @@ html, body {
 }
 
 /* Control mapa */
-
 .map-controls {
     display: flex;
     flex-direction: column;
+    align-items: center;
     margin: 10px;
     border-radius: 4px;
     overflow: hidden;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
 }
 
-.map-control-button {
+/* Grup dels controls */
+.map-controls-buttons {
+    display: flex;
+    flex-direction: column;
+    max-height: 400px;
+    opacity: 1;
+    overflow: hidden;
+    transition:
+        max-height 0.25s ease,
+        opacity 0.2s ease;
+}
+
+.map-controls-buttons > button {
     width: 34px;
     height: 34px;
     padding: 0;
@@ -473,16 +485,44 @@ html, body {
         color 0.2s ease;
 }
 
-.map-control-button:last-child {
+
+/* Quan està ocult */
+.map-controls.collapsed .map-controls-buttons {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+/* Botó inferior */
+.map-controls-toggle {
+    width: 40px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.map-controls-buttons:last-child {
     border-bottom: none;
 }
 
-.map-control-button:hover {
+.map-controls-buttons:hover {
     background: #f4f4f4;
     color: #3d9cff;
 }
 
-.map-control-button.active {
+.map-controls-buttons.active {
     color: #3d9cff;
 }
 
