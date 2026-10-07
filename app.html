@@ -34,14 +34,9 @@
                     <span class="material-symbols-outlined">layers</span>
                 </button>
 
-                <button class="icon-button" id="alertButton" title="Alert">
-                    <span class="material-symbols-outlined" style="color:#FDB430">add_alert</span>
+                <button class="icon-button" id="accountButton" title="Compte">
+                    <span class="material-symbols-outlined">account_circle</span>
                 </button>
-
-                <button class="icon-button" id="forbiddenButton" title="Forbidden">
-                    <span class="material-symbols-outlined" style="color: #FD3130;">dangerous</span>
-                </button>
-
             </div>
         </div>
 
@@ -112,6 +107,38 @@
             </div>
         </section>
 
+        <section class="account-menu-section">
+            <div id="account" class="account-section-content">
+                <div id="accountInfo" class="account-info">
+                    <div>
+                        <span class="material-symbols-outlined">person</span>
+                        <span>Nom d'usuari</span>
+                        <span id="username"></span>
+                    </div>
+                    <div>
+                        <span class="material-symbols-outlined">groups</span>
+                        <span>Rol asignat</span>
+                        <span id="userRole"></span>
+                    </div>
+                </div>
+                <div class="separator"></div>
+                <div id="accountActions" class="account-actions">
+                    <button id="userGuide">
+                        <span class="material-symbols-outlined">news</span>
+                        <span>Guia</span> 
+                    </button>
+                    <button id="support">
+                        <span class="material-symbols-outlined">contact_support</span>
+                        <span>Suport</span>
+                    </button>
+                    <button id="logoutButton">
+                        <span class="material-symbols-outlined">logout</span>
+                        <span>Tanca sessió</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
     </aside>
 
     <!-- Ocultar menú -->
@@ -154,6 +181,7 @@
     <script src="./static/js/basemaps.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="module" src="./auth/auth.js"></script>
+    <script type="module" src="./auth/logout.js"></script>
     
 </body>
 </html>

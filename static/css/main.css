@@ -33,7 +33,7 @@ html, body {
     left: 24px;
     width: 380px;
     max-height: calc(100vh - 48px);
-    overflow-y: auto;
+    overflow: hidden;
     padding: 15px 15px 10px;
     background:
         linear-gradient(
@@ -96,6 +96,10 @@ html, body {
     display: block;
 }
 
+#sidebar .menu-container {
+    overflow-y: auto;
+}
+
 /* =========================================
    HEADER BUTTONS
 ========================================= */
@@ -107,12 +111,11 @@ html, body {
 }
 
 .icon-button {
-    width: 42px;
-    height: 42px;
+    width: 30px;
+    height: 30px;
     border: none;
     background: transparent;
     color: white;
-    font-size: 32px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -131,18 +134,8 @@ html, body {
     color: #3d9cff; 
 }
 
-.material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24
-}
-
-/* Separators */
-
 .separator {
-    height: 3px;
+    height: 2px;
     margin: 8px 0px;
     background:
         rgba(255,255,255,0.18);
@@ -165,8 +158,8 @@ html, body {
     border: none;
     background: transparent;
     color: #3d9cff;
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 1.1rem;
+    font-weight: 600;
     letter-spacing: 0.5px;
     cursor: pointer;
     text-align: left;
@@ -202,11 +195,9 @@ html, body {
 ========================================= */
 
 .section-content {
-    max-height: 2000px;
     opacity: 1;
     overflow: hidden;
-    margin-top: 8px;
-
+    margin-top: 3px;
     transition:
         max-height 0.3s ease,
         opacity 0.2s ease,
@@ -219,169 +210,204 @@ html, body {
     margin-top: 0;
 }
 
-/* SHOW LAYER ITEMS */
-
-.network-layers {
-    max-height: 1000px;
-    opacity: 1;
-    overflow: hidden;
-
-    transition:
-        max-height 0.25s ease,
-        opacity 0.2s ease;
-}
-
-.network-layers.collapsed {
-    max-height: 0;
-    opacity: 0;
-}
-
 /* =========================================
-   LAYER ITEMS
+   ACCOUNT MENU
 ========================================= */
 
-.layer-item {
+.account-menu-section {
+    display: none;
+    width: 100%;
+}
 
-    position: relative;
+#sidebar.account-open .account-menu-section {
+    display: block;
+}
 
+.account-section-content {
+    width: 100%;
+    padding: 10px 0;
+}
+
+/* -------------------------
+   Account information
+   ------------------------- */
+
+.account-info {
     display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+}
 
+.account-info > div {
+    display: flex;
     align-items: center;
-
-    gap: 16px;
-
-    margin-bottom: 18px;
-
-    cursor: pointer;
-
-    font-size: 18px;
+    width: 100%;
+    gap: 8px;
 }
 
-
-.layer-item input {
-
-    position: absolute;
-
-    opacity: 0;
-
-    pointer-events: none;
-}
-
-
-.custom-checkbox {
-
-    width: 29px;
-    height: 29px;
-
+.account-info .material-symbols-outlined {
     flex-shrink: 0;
+}
 
+/* "Nom d'usuari" / "Rol d'usuari" */
+.account-info > div > span:nth-child(2) {
+    white-space: nowrap;
+}
+
+/* Username / role from Supabase */
+#username,
+#userRole {
+    margin-left: auto;
+    text-align: right;
+    white-space: nowrap;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+/* -------------------------
+   Account actions
+   ------------------------- */
+
+.account-actions {
     display: flex;
+    width: 100%;
+    gap: 8px;
+}
 
+.account-actions button {
+    flex: 1;
+    min-width: 0;
+    height: 38px;
+    padding: 0 10px;
+    display: flex;
     align-items: center;
     justify-content: center;
-
-    border-radius: 5px;
-
-    font-size: 20px;
-
-    font-weight: 700;
-
-    color: white;
+    gap: 6px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-
-.custom-checkbox.orange {
-    background: #ff9800;
+.account-actions button .material-symbols-outlined {
+    flex-shrink: 0;
+    font-size: 18px;
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 500,
+        'GRAD' 0,
+        'opsz' 20;
+    transition: color 0.2s ease;
 }
 
+/* =========================
+   GUIA
+   ========================= */
 
-.custom-checkbox.blue {
-    background: #2788ff;
+#userGuide {
+    background: rgba(255, 193, 7, 0.14);
+    border-color: rgba(255, 193, 7, 0.35);
+    color: #ffd54f;
 }
 
-
-.custom-checkbox.green {
-    background: #45b957;
+#userGuide .material-symbols-outlined {
+    color: #ffd54f;
 }
 
-
-.custom-checkbox.empty {
-
-    border:
-        2px solid rgba(255,255,255,0.35);
-
-    background: transparent;
+#userGuide:hover {
+    background: rgba(255, 193, 7, 0.24);
+    border-color: rgba(255, 193, 7, 0.55);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.12);
+    transform: translateY(-1px);
 }
 
+/* =========================
+   SUPORT
+   ========================= */
 
-.layer-item input:not(:checked) + .custom-checkbox {
-
-    background: transparent;
-
-    border:
-        2px solid rgba(255,255,255,0.35);
-
-    color: transparent;
+#support {
+    background: rgba(64, 156, 255, 0.14);
+    border-color: rgba(64, 156, 255, 0.35);
+    color: #72b7ff;
 }
 
+#support .material-symbols-outlined {
+    color: #72b7ff;
+}
+
+#support:hover {
+    background: rgba(64, 156, 255, 0.24);
+    border-color: rgba(64, 156, 255, 0.55);
+    box-shadow: 0 4px 12px rgba(64, 156, 255, 0.12);
+    transform: translateY(-1px);
+}
+
+/* =========================
+   LOGOUT
+   ========================= */
+
+#logoutButton {
+    background: rgba(239, 83, 80, 0.14);
+    border-color: rgba(239, 83, 80, 0.35);
+    color: #ff8582;
+}
+
+#logoutButton .material-symbols-outlined {
+    color: #ff8582;
+}
+
+#logoutButton:hover {
+    background: rgba(239, 83, 80, 0.24);
+    border-color: rgba(239, 83, 80, 0.55);
+    box-shadow: 0 4px 12px rgba(239, 83, 80, 0.12);
+    transform: translateY(-1px);
+}
 
 /* =========================================
    BASEMAP ITEMS
 ========================================= */
 
 .basemap-item {
-
     display: flex;
-
     align-items: center;
-
-    gap: 16px;
-
-    margin-bottom: 19px;
-
+    gap: 10px;
+    margin-bottom: 15px;
     cursor: pointer;
-
-    font-size: 18px;
+    font-size: 1rem;
 }
 
-
 .basemap-item input {
-
     position: absolute;
-
     opacity: 0;
 }
 
-
 .radio {
-
-    width: 29px;
-    height: 29px;
-
-    flex-shrink: 0;
-
+    width: 20px;
+    height: 20px;
     border:
-        2px solid rgba(255,255,255,0.4);
-
+        1.5px solid rgba(255,255,255,0.4);
     border-radius: 50%;
-
     display: flex;
-
     align-items: center;
     justify-content: center;
 }
 
-
 .basemap-item input:checked + .radio {
-
     border-color: #318cff;
-
     background: #318cff;
-
     box-shadow:
-        inset 0 0 0 7px #f5f7fb;
+        inset 0 0 0 4px #f5f7fb;
 }
-
 
 /* =========================================
    BOTÓ COLLAPSE
@@ -423,20 +449,16 @@ html, body {
 ========================================= */
 
 #sidebar.hidden {
-
     transform:
         translateX(
             calc(-100% - 30px)
         );
-
     opacity: 0;
 }
 
 
 .sidebar-toggle.hidden {
-
     left: 0;
-
     border-radius:
         0 18px 18px 0;
 }
@@ -446,8 +468,7 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 10px;
-    border-radius: 4px;
+    border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
 }
@@ -456,7 +477,6 @@ html, body {
 .map-controls-buttons {
     display: flex;
     flex-direction: column;
-    max-height: 400px;
     opacity: 1;
     overflow: hidden;
     transition:
@@ -465,16 +485,13 @@ html, body {
 }
 
 .map-controls-buttons > button {
-    width: 34px;
-    height: 34px;
-    padding: 0;
-    margin: 0;
+    width: 40px;
+    height: 30px;
     border: none;
+    border-radius: 1px;
     border-bottom: 1px solid #ccc;
     background: #fff;
     color: #333;
-    font-size: 20px;
-    line-height: 34px;
     text-align: center;
     cursor: pointer;
     display: flex;
@@ -484,7 +501,6 @@ html, body {
         background 0.2s ease,
         color 0.2s ease;
 }
-
 
 /* Quan està ocult */
 .map-controls.collapsed .map-controls-buttons {
@@ -497,7 +513,6 @@ html, body {
     margin: 0;
     border: none;
     border-bottom: 1px solid #ccc;
-    border-radius: 10px;
 }
 
 /* Botó inferior */
@@ -508,7 +523,6 @@ html, body {
     align-items: center;
     justify-content: center;
     border: none;
-    border-radius: 10px;
     cursor: pointer;
     padding: 0;
 }
@@ -517,12 +531,15 @@ html, body {
     border-bottom: none;
 }
 
-.map-controls-buttons:hover {
-    background: #f4f4f4;
+.map-controls-buttons > button:hover {
     color: #3d9cff;
 }
 
-.map-controls-buttons.active {
+.map-controls-buttons > button:hover {
+    color: #3d9cff;
+}
+
+.map-controls-toggle:hover {
     color: #3d9cff;
 }
 

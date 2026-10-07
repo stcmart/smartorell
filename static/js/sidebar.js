@@ -1,6 +1,5 @@
 /* Sidebar toogle */
 const sidebar = document.getElementById("sidebar");
-
 const sidebarToggle = document.getElementById("sidebarToggle");
 
 sidebarToggle.addEventListener("click", function() {
@@ -20,6 +19,13 @@ sidebarToggle.addEventListener("click", function() {
 
     setTimeout(() => map.invalidateSize(), 350);
 
+});
+
+/* Account button */
+const accountButton = document.getElementById("accountButton");
+
+accountButton.addEventListener("click", () => {
+    sidebar.classList.toggle("account-open");
 });
 
 /* Layer button*/

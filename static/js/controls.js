@@ -8,20 +8,22 @@ L.control.scale({
 const controls = document.getElementById("mapControls");
 const mapControlsToggle = document.getElementById("mapControlsToggle");
 
-mapControlsToggle.addEventListener("click", () => {
+mapControlsToggle.addEventListener("click", function () {
 
     mapControls.classList.toggle("collapsed");
 
-    const icon = mapControlsToggle.querySelector(
-        ".material-symbols-rounded"
-    );
+    const icon = this.querySelector(".material-symbols-outlined");
 
     if (mapControls.classList.contains("collapsed")) {
-        icon.textContent = "tune";
-        mapControlsToggle.title = "Mostrar controls del mapa";
+
+        icon.textContent = "keyboard_arrow_up";
+        this.title = "Mostrar controls";
+
     } else {
-        icon.textContent = "close";
-        mapControlsToggle.title = "Ocultar controls del mapa";
+
+        icon.textContent = "keyboard_arrow_down";
+        this.title = "Ocultar controls";
+
     }
 });
 
