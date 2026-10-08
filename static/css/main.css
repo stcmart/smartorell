@@ -51,6 +51,146 @@ html, body {
         transform 0.35s ease,
         opacity 0.35s ease;
 }
+/* =========================================
+   CONTROL ESCALA + ATRIBUCIÓ
+   ========================================= */
+
+.map-info-control {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    height: 19px;
+
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+
+/* =========================================
+   ESCALA LEAFLET
+   ========================================= */
+
+.map-info-control .leaflet-control-scale {
+    margin: 0;
+}
+
+
+/* =========================================
+   INFO + ATRIBUCIÓ
+   ========================================= */
+
+.map-attribution-info {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    height: 19px;
+
+    background: rgba(255, 255, 255, 0.70);
+    border-radius: 2px;
+
+    color: inherit;
+
+    font-size: inherit;
+    line-height: 19px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   BOTÓ INFO
+   ========================================= */
+
+.map-attribution-button {
+    width: 19px;
+    height: 19px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    margin: 0;
+
+    border-radius: 20px;
+    border: 0;
+    outline: none;
+
+    background: transparent;
+    color: inherit;
+
+    cursor: pointer;
+
+    font: inherit;
+}
+
+
+/* La pròpia icona és el botó */
+
+.map-attribution-button .material-symbols-outlined {
+    display: block;
+
+    font-size: 15px;
+    line-height: 19px;
+
+    color: inherit;
+
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.map-attribution-button:hover .material-symbols-outlined {
+    opacity: 0.65;
+}
+
+
+/* =========================================
+   PANEL ATRIBUCIÓ
+   ========================================= */
+
+.map-attribution-panel {
+    position: absolute;
+
+    left: 100%;
+    top: 0;
+
+    height: 19px;
+
+    display: none;
+    align-items: center;
+
+    padding: 0 6px;
+
+    background: rgba(255, 255, 255, 0.70);
+
+    border-radius: 0 2px 2px 0;
+
+    color: inherit;
+
+    font: inherit;
+    font-size: 10px;
+    line-height: 19px;
+    gap: 1.5px;
+
+    white-space: nowrap;
+}
+
+
+/* Quan està obert */
+
+.map-attribution-info.open .map-attribution-panel {
+    display: flex;
+}
+
+.leaflet-control-attribution {
+    display: none;
+}
 
 /* Scrollbar */
 #sidebar::-webkit-scrollbar {
@@ -596,7 +736,7 @@ html, body {
         border-radius:
         0 18px 18px 0;
         top: auto;
-        bottom: 10px;
+        bottom: 15px;
 
         left: 0px;
         right: auto;
