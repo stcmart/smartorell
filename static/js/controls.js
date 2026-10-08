@@ -1,8 +1,131 @@
-/* ESCALE */
-L.control.scale({
-    imperial: false,
-    metric: true
-}).addTo(map);
+const mapInfoControl = L.control({
+    position: 'bottomleft'
+});
+
+mapInfoControl.onAdd = function (map) {
+
+    const container = L.DomUtil.create(
+        'div',
+        'map-info-control'
+    );
+
+
+    // =========================
+    // ESCALA LEAFLET
+    // =========================
+
+    const scaleControl = L.control.scale({
+        metric: true,
+        imperial: false,
+        maxWidth: 100
+    });
+
+    // IMPORTANT:
+    // Afegim realment el control al mapa perquè
+    // Leaflet inicialitzi correctament _map i els seus events.
+    scaleControl.addTo(map);
+
+    // Recuperem el seu element HTML
+    const scaleElement = scaleControl.getContainer();
+
+    // El movem dins del nostre contenidor
+    container.appendChild(scaleElement);
+
+
+    // =========================
+    // BOTÓ INFO
+    // =========================
+
+    const attributionInfo = L.DomUtil.create(
+        'div',
+        'map-attribution-info',
+        container
+    );
+
+    const button = L.DomUtil.create(
+        'button',
+        'map-attribution-button',
+        attributionInfo
+    );
+
+    button.type = 'button';
+
+    button.title = 'Informació del mapa';
+
+    button.setAttribute(
+        'aria-label',
+        'Informació del mapa'
+    );
+
+    button.innerHTML = `
+        <span class="material-symbols-outlined">
+            info
+        </span>
+    `;
+
+
+    // =========================
+    // PANEL ATRIBUCIÓ
+    // =========================
+
+    const panel = L.DomUtil.create(
+        'div',
+        'map-attribution-panel',
+        attributionInfo
+    );
+
+    panel.innerHTML =
+        map.attributionControl
+            .getContainer()
+            .innerHTML;
+
+
+    // Evitar que els clics arribin al mapa
+    L.DomEvent.disableClickPropagation(container);
+    L.DomEvent.disableScrollPropagation(container);
+
+
+    // Obrir / tancar informació
+    L.DomEvent.on(
+        button,
+        'click',
+        function () {
+
+            attributionInfo.classList.toggle('open');
+
+        }
+    );
+
+
+    return container;
+};
+
+function updateMapAttribution() {
+
+    const panel = document.querySelector(
+        '.map-attribution-panel'
+    );
+
+    if (!panel || !map.attributionControl) {
+        return;
+    }
+
+    panel.innerHTML =
+        map.attributionControl
+            .getContainer()
+            .innerHTML;
+}
+
+map.on('layeradd layerremove', function () {
+
+    // Esperem que Leaflet actualitzi primer
+    requestAnimationFrame(() => {
+        updateMapAttribution();
+    });
+
+});
+
+mapInfoControl.addTo(map);
 
 /* CONTROLS */
 const controls = document.getElementById("mapControls");

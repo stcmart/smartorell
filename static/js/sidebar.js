@@ -26,6 +26,8 @@ const accountButton = document.getElementById("accountButton");
 
 accountButton.addEventListener("click", () => {
     sidebar.classList.toggle("account-open");
+    sidebar.classList.remove("layers-open");
+    this.classList.toggle("active");
 });
 
 /* Layer button*/
@@ -42,6 +44,7 @@ document.querySelectorAll(".section-header").forEach(header => {
 /* Toogle layer menú */
 layerButton.addEventListener("click", function() {
     sidebar.classList.toggle("layers-open");
+    sidebar.classList.remove("account-open");
     this.classList.toggle("active");
 });
 

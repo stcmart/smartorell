@@ -7,7 +7,7 @@ const icgcTopografic = L.tileLayer.wms(
         format: "image/png",
         transparent: false,
         version: "1.3.0",
-        attribution: "&copy; ICGC"
+        attribution: "&copy; IDEC"
     }
 );
 
@@ -18,7 +18,7 @@ const icgcTopograficGris = L.tileLayer.wms(
         format: "image/png",
         transparent: false,
         version: "1.3.0",
-        attribution: "&copy; ICGC"
+        attribution: "&copy; IDEC"
     }
 );
 
@@ -29,7 +29,7 @@ const icgcEstandard = L.tileLayer.wms(
         format: "image/png",
         transparent: false,
         version: "1.3.0",
-        attribution: "&copy; ICGC"
+        attribution: "&copy; IDEC"
     }
 );
 
@@ -40,7 +40,7 @@ const icgcEstandardGris = L.tileLayer.wms(
         format: "image/png",
         transparent: false,
         version: "1.3.0",
-        attribution: "&copy; ICGC"
+        attribution: "&copy; IDEC"
     }
 );
 
@@ -51,7 +51,7 @@ const icgcSimplificat = L.tileLayer.wms(
         format: "image/png",
         transparent: false,
         version: "1.3.0",
-        attribution: "&copy; ICGC"
+        attribution: "&copy; IDEC"
     }
 );
 
@@ -62,7 +62,7 @@ const icgcOrtofoto = L.tileLayer.wms(
         format: "image/png",
         transparent: false,
         version: "1.3.0",
-        attribution: "&copy; ICGC"
+        attribution: "&copy; IDEC"
     }
 );
 
