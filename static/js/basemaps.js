@@ -1,3 +1,4 @@
+import { map } from './map.js';
 
 /* Basemaps available */ 
 const icgcTopografic = L.tileLayer.wms(

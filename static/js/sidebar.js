@@ -1,3 +1,5 @@
+import { map } from './map.js';
+
 /* Sidebar toogle */
 const sidebar = document.getElementById("sidebar");
 const sidebarToggle = document.getElementById("sidebarToggle");
