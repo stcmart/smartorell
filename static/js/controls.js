@@ -1,3 +1,5 @@
+import { map } from './map.js';
+
 const mapInfoControl = L.control({
     position: 'bottomleft'
 });

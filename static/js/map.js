@@ -1,4 +1,3 @@
-/* Initialize map */
 const map = L.map("map", {
     zoomControl: false,
     minZoom: 13,
@@ -11,6 +10,8 @@ const map = L.map("map", {
     [41.4747, 1.9292],
     14
 );
+
+export { map };
 
 /* Popups*/
 
