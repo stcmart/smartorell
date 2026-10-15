@@ -399,7 +399,7 @@ html, body {
 
 /* Username / role from Supabase */
 #username,
-#userRole {
+#userRole, #userToken {
     margin-left: auto;
     text-align: right;
     white-space: nowrap;
@@ -711,6 +711,36 @@ html, body {
     100% {
         transform: scale(1); opacity: 1;}
     }
+
+    /* =========================================
+   POPUP EVTECNIC */
+
+.evtecnic-popup h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+}
+
+.evtecnic-popup p {
+    margin: 6px 0;
+}
+
+.evtecnic-sockets {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.evtecnic-sockets th,
+.evtecnic-sockets td {
+    padding: 7px 9px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.evtecnic-sockets th {
+    background: #f2f4f7;
+}
 
 /* =========================================
    RESPONSIVE

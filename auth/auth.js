@@ -33,6 +33,39 @@ async function checkAuth() {
     console.log("Rol:", profile.role);
     document.getElementById("username").textContent = profile.email;
     document.getElementById("userRole").textContent = profile.role;
+
+    return profile;
 }
 
+async function loadUserToken() {
+
+    const {
+        data: { user }
+    } = await supabaseClient.auth.getUser();
+
+    const userToken = document.getElementById('userToken');
+
+    if (!user) {
+        userToken.textContent = 'Cap token assignat';
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from('tokens')
+        .select('platform')
+        .eq('usuari', user.id)
+        .maybeSingle();
+
+    if (error) {
+        console.error(error);
+        userToken.textContent = 'Cap token assignat';
+        return;
+    }
+
+    userToken.textContent = data?.platform ?? 'Cap token assignat';
+}
+
+export { checkAuth };
+
 checkAuth();
+loadUserToken();

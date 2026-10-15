@@ -29,7 +29,6 @@ const accountButton = document.getElementById("accountButton");
 accountButton.addEventListener("click", () => {
     sidebar.classList.toggle("account-open");
     sidebar.classList.remove("layers-open");
-    this.classList.toggle("active");
 });
 
 /* Layer button*/
@@ -79,93 +78,4 @@ document.getElementById("searchButton").addEventListener("click", function() {
     return;
   }
   console.log("Cerca:", search);
-});
-
-/* Add temp senyalització */
-fetch('./data/senyalitzacio.geojson')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(geojsonFeature => {
-
-        const senyalitzacioLayer = L.geoJSON(geojsonFeature, {
-
-            pointToLayer: function (feature, latlng) {
-
-                const comentari = feature.properties?.comentari;
-
-                let color = 'gray';
-
-                if (comentari === 'Tancament del gual inundable') {
-                    color = 'red';
-
-                } else if (comentari === 'Prohibició parking risc inundació') {
-                    color = 'orange';
-                }
-
-                return L.circleMarker(latlng, {
-                    radius: 8,
-                    fillColor: color,
-                    color: '#ffffff',
-                    weight: 2,
-                    opacity: 1,
-                    fillOpacity: 0.8
-                });
-            },
-
-            onEachFeature: function (feature, layer) {
-                const p = feature.properties;
-                const popupHTML = `
-                    <div class="popup-content">
-                        <div>
-                            <strong>TIPUS:</strong> ${p.comentari ?? ""}
-                        </div>
-                        <div>
-                            <strong>SIM:</strong> ${p.sim ?? ""}
-                            <div class="sms-buttons">
-                                <a href="sms:${p.sim ?? ""}?body=ON" class="sms-button">ON</a>
-                                <a href="sms:${p.sim ?? ""}?body=OFF" class="sms-button">OFF</a>
-                            </div>
-                        </div>
-                    </div>
-                    `;
-
-    layer.bindPopup(popupHTML);
-}
-
-        }).addTo(map);
-
-    })
-    .catch(error => {
-        console.error('Error carregant el GeoJSON:', error);
-    });
-
-/* Enviament SMS */
-
-document.getElementById("alertButton").addEventListener("click", () => {
-    const numbers_alert = [
-        "+345901020317654",
-        "+345901020354121",
-        "+345901020349954",
-        "+345901020345062",
-        "+345901020379297",
-        "+345901020379425"
-    ];
-
-    window.location.href = `sms:${numbers_alert.join(",")}?body=ON`;
-});
-
-document.getElementById("forbiddenButton").addEventListener("click", () => {
-    const numbers_forbidden = [
-        "+345901020364235",
-        "+345901020353409",
-        "+345901020364235",
-        "+345901020354249",
-        "+345901020320295"
-    ];
-
-    window.location.href = `sms:${numbers_forbidden.join(",")}?body=ON`;
 });
