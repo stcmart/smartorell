@@ -525,15 +525,17 @@ document.addEventListener(
          */
 
         const recipients =
-            sims.join(',');
-
-
-        /*
-         * Codificar el missatge
-         */
+            sims
+                .map(numero => String(numero).trim())
+                .filter(numero => numero !== '')
+                .join(',');
 
         const encodedMessage =
             encodeURIComponent(message);
+
+        console.log("DESTINATARIS:", recipients);
+        console.log("TOTAL:", sims.length);
+        console.log("SMS:", `sms:${recipients}?body=${encodedMessage}`);
 
 
         let smsURL;
