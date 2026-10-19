@@ -1,6 +1,6 @@
 import { supabaseClient } from '../../auth/supabase.js';
 
-export async function loadSenyalitzacioLED(map) {
+export async function loadSenyalitzacioLED() {
 
     const { data, error } = await supabaseClient
         .rpc('get_senyalitzacio_led');
@@ -10,7 +10,7 @@ export async function loadSenyalitzacioLED(map) {
             'Error carregant senyalització LED:',
             error
         );
-        return;
+        return null;
     }
 
     const geojson =
@@ -18,7 +18,7 @@ export async function loadSenyalitzacioLED(map) {
             ? JSON.parse(data)
             : data;
 
-    L.geoJSON(geojson, {
+    const layer = L.geoJSON(geojson, {
 
         pointToLayer(feature, latlng) {
 
@@ -91,5 +91,7 @@ export async function loadSenyalitzacioLED(map) {
             layer.bindPopup(popupHTML);
         }
 
-    }).addTo(map);
+    });
+
+    return layer;
 }
