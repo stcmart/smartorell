@@ -467,7 +467,6 @@ document.addEventListener(
                 '.led-sms-button'
             );
 
-
         if (!button) return;
 
 
@@ -493,12 +492,95 @@ document.addEventListener(
         }
 
 
+        /*
+         * Detectar dispositiu
+         */
+
+        const userAgent =
+            navigator.userAgent ||
+            navigator.vendor ||
+            window.opera;
+
+
+        const isIOS =
+            /iPad|iPhone|iPod/i.test(userAgent) ||
+            (
+                navigator.platform === 'MacIntel' &&
+                navigator.maxTouchPoints > 1
+            );
+
+
+        const isAndroid =
+            /Android/i.test(userAgent);
+
+
+        /*
+         * Preparar destinataris
+         *
+         * Exemple:
+         * ["600111111", "600222222", "600333333"]
+         *
+         * es converteix en:
+         * 600111111,600222222,600333333
+         */
+
         const recipients =
             sims.join(',');
 
 
+        /*
+         * Codificar el missatge
+         */
+
+        const encodedMessage =
+            encodeURIComponent(message);
+
+
+        let smsURL;
+
+
+        /*
+         * iOS
+         */
+
+        if (isIOS) {
+
+            smsURL =
+                `sms:${recipients}&body=${encodedMessage}`;
+
+        }
+
+
+        /*
+         * Android
+         */
+
+        else if (isAndroid) {
+
+            smsURL =
+                `sms:${recipients}?body=${encodedMessage}`;
+
+        }
+
+
+        /*
+         * Altres dispositius
+         */
+
+        else {
+
+            smsURL =
+                `sms:${recipients}?body=${encodedMessage}`;
+
+        }
+
+
+        /*
+         * Obrir aplicació SMS
+         */
+
         window.location.href =
-            `sms:${recipients}?body=${encodeURIComponent(message)}`;
+            smsURL;
 
     }
 );
