@@ -1,3 +1,4 @@
+/* Base */
 * {
     margin: 0;
     padding: 0;
@@ -9,40 +10,38 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
     background: #EEF1EA;
-    font-family: 'Manrope', Arial, Helvetica, sans-serif;
+    font-family: 'Manrope', Arial, sans-serif;
     position: relative;
-    overflow: hidden;
+    isolation: isolate;
 }
 
 body::after {
     content: "";
     position: absolute;
-    left: 0;
-    bottom: 0;
+    inset: auto 0 0;
     width: 100%;
     aspect-ratio: 2172 / 724;
     background: url("../../assets/background.svg") center bottom / 100% 100% no-repeat;
     z-index: -1;
 }
 
+/* Contenidor i marca */
+
 .login-container {
     width: 900px;
     min-height: 550px;
     display: flex;
-    background: white;
-    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.20);
-    position: relative;
-    z-index: 1;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
 }
 
 .login-image {
     width: 50%;
-    background-image: url("../../assets/ajuntamentnou.jpg");
-    background-size: cover;
-    background-position: center;
+    background: url("../../assets/ajuntamentnou.jpg") center / cover no-repeat;
 }
 
 .login-form {
@@ -66,64 +65,348 @@ body::after {
 }
 
 .brand h2 {
+    color: #3D523D;
     font-size: 20px;
-    font-family: 'Manrope', Arial, Helvetica, sans-serif;
     font-weight: 800;
-    color: #3d523d;
+}
+
+/* Navegació i títols */
+
+.back-button {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 20px;
+    color: #3D523D;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.back-button span:last-child {
+    text-decoration: underline;
+}
+
+.login-form.password-step .back-button,
+.login-form.request-sent-step .back-button,
+.login-form.reset-code-step .back-button {
+    display: flex;
 }
 
 .login-form h1 {
-    font-size: 32px;
     margin-bottom: 35px;
-    font-family: 'Inter Tight', Arial, Helvetica, sans-serif;
+    font-family: 'Inter Tight', Arial, sans-serif;
+    font-size: 32px;
     font-weight: 800;
 }
 
+/* Inputs */
+
 .login-form label {
     display: block;
-    font-family: 'Inter Tight', Arial, Helvetica, sans-serif;
-    font-size: 15px;
-    font-weight: bold;
     margin-bottom: 8px;
+    font-family: 'Inter Tight', Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
 }
 
 .login-form input {
     width: 100%;
     padding: 13px 15px;
     margin-bottom: 25px;
-    border: 1px solid #ccc;
-    border-radius: 7px;
-    font-size: 16px;
+    border: 0;
+    border-bottom: 2px solid #CCC;
     outline: none;
+    font-size: 12px;
 }
 
 .login-form input:focus {
-    border-color: #3d523d;
-    border: 2px solid;
+    border-bottom-color: #3D523D;
 }
 
-.login-button {
-    width: 100%;
-    padding: 14px;
-    margin-top: 5px;
-    border: none;
-    border-radius: 7px;
-    background: #3d523d;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
+.input-container-password {
+    display: none;
+}
+
+.login-form.password-step .input-container-email {
+    display: none;
+}
+
+.login-form.password-step .input-container-password {
+    display: block;
+}
+
+.login-form.password-step .input-container-email input {
+    background: #F3F3F3;
+    color: #777;
+    cursor: not-allowed;
+}
+
+.login-form.reset-code-step .input-container,
+.login-form.reset-password-step .input-container,
+.login-form.password-updated-step .input-container {
+    display: none;
+}
+
+.forgot-password {
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+#forgot-password-link {
+    color: #999;
+    font-size: 11px;
     cursor: pointer;
-    transition: 0.2s;
+}
+
+#forgot-password-link:hover {
+    color: #3D523D;
+    text-decoration: underline;
+}
+
+.login-form.reset-password-step #forgot-password-link,
+.login-form.password-updated-step #forgot-password-link {
+    display: none;
+}
+
+/* Codi OTP */
+
+#otp-section {
+    width: 100%;
+}
+
+#otp-section[hidden],
+#reset-password-section[hidden],
+#password-updated-section[hidden] {
+    display: none;
+}
+
+.recovery-description {
+    margin: -15px 0 25px;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.otp-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 22px;
+}
+
+.otp-input {
+    width: 48px !important;
+    height: 55px;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 1px solid #D9DED5 !important;
+    border-radius: 10px;
+    background: #F8F9F6;
+    color: #3D523D;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 23px !important;
+    font-weight: 800;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.otp-input:focus {
+    border: 2px solid #3D523D !important;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(61, 82, 61, 0.10);
+}
+
+.otp-resend-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 5px;
+    color: #999;
+    font-size: 11px;
+    text-align: center;
+}
+
+.otp-resend-message {
+    color: #999;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.otp-resend-message strong {
+    color: #3D523D;
+    font-weight: 800;
+}
+
+.resend-otp {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #3D523D;
+    font-family: 'Manrope', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.resend-otp:hover {
+    text-decoration: underline;
+}
+
+.resend-otp:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+/* Canvi de contrasenya */
+
+#reset-password-section:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.login-form.reset-password-step .input-container,
+.login-form.reset-password-step #forgot-password-link {
+    display: none;
+}
+
+.login-form.reset-password-step .back-button,
+.login-form.password-updated-step .back-button {
+    display: none;
+}
+
+/* Sol·licitud enviada */
+
+.request-sent {
+    padding: 10px 0;
+    text-align: center;
+}
+
+.request-sent[hidden] {
+    display: none;
+}
+
+.request-sent h2 {
+    margin-bottom: 15px;
+    color: #3D523D;
+    font-family: 'Inter Tight', Arial, sans-serif;
+    font-size: 23px;
+}
+
+.request-sent p {
+    color: #666;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.request-sent .request-email {
+    margin-top: 15px;
+    overflow-wrap: anywhere;
+    font-weight: 700;
+}
+
+.login-form.request-sent-step .input-container,
+.login-form.request-sent-step .login-button,
+.login-form.request-sent-step #welcome-title,
+.login-form.request-sent-step .login-error {
+    display: none;
+}
+
+/* Contrasenya actualitzada */
+
+.password-updated-step #welcome-title {
+    display: none;
+}
+
+.password-updated-step .input-container-email,
+.password-updated-step .input-container-password {
+    display: none;
+}
+
+.password-updated-step #password-updated-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    text-align: center;
+    gap: 12px;
+}
+
+.password-updated-icon {
+    color: #3D523D;
+    font-size: 72px;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.password-updated-step #password-updated-section h2 {
+    margin: 0 0 3px;
+    color: #3D523D;
+    font-family: 'Inter Tight', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.password-updated-step #password-updated-section p {
+    margin: 0;
+    color: #666;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* Errors */
+
+.login-error {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #C9A900;
+    border-radius: 10px;
+    background: rgba(255, 220, 80, 0.2);
+    color: #8A7400;
+    font-size: 12px;
+}
+
+.login-error.visible {
+    display: flex;
+}
+
+.login-error .material-symbols-outlined {
+    font-size: 18px;
+}
+
+/* Botó principal */
+
+.login-button {
+    width: 48px;
+    padding: 10px;
+    margin-top: 5px;
+    align-self: flex-end;
+    border: 0;
+    border-radius: 50px;
+    background: #3D523D;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
 .login-button:hover {
-    background: #444;
+    background: #293B29;
 }
 
-@media (max-width: 750px) {
+/* Responsive */
 
+@media (max-width: 750px) {
     .login-container {
-        width: 90%;
+        width: 100%;
         min-height: auto;
     }
 
@@ -134,5 +417,33 @@ body::after {
     .login-form {
         width: 100%;
         padding: 35px;
+    }
+}
+
+@media (max-width: 400px) {
+    .login-form {
+        padding: 25px;
+    }
+
+    .brand img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .brand h2 {
+        font-size: 17px;
+    }
+
+    .login-form h1 {
+        font-size: 28px;
+    }
+
+    .otp-container {
+        gap: 5px;
+    }
+
+    .otp-input {
+        height: 48px;
+        font-size: 20px !important;
     }
 }

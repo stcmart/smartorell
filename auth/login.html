@@ -1,36 +1,167 @@
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMartorell</title>
 
-    <title>Inicia sessió</title>
     <link rel="stylesheet" href="../static/css/login.css">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
 
 <body>
+
     <main class="login-container">
-        <div class="login-image"></div>
+
+        <div class="login-image" aria-hidden="true"></div>
+
         <form class="login-form" id="login-form">
+
             <div class="brand">
-                <img src="../assets/logo_blanc.png" alt="Logo">
+                <img src="../assets/logo_blanc.png" alt="Logo SMartorell">
                 <h2>/ Serveis municipals i<br> via pública</h2>
             </div>
-            <h1>Benvinguts</h1>
 
-            <label for="email">Correu electrònic</label>
-            <input type="email" id="email" name="email" placeholder="Introdueix el teu correu" required>
+            <div id="back-button" class="back-button" role="button" tabindex="0">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span>Torna</span>
+            </div>
 
-            <label for="password">Contrasenya</label>
-            <input type="password" id="password" name="password" placeholder="Introdueix la teva contrasenya" required>
+            <h1 id="welcome-title">Benvingut</h1>
 
-            <button type="submit" class="login-button">Inicia sessió</button>
+            <!-- LOGIN -->
+            <div class="input-container">
+
+                <div class="input-container-email">
+                    <label for="email">Correu electrònic</label>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="Introdueix el teu correu electrònic"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
+
+                <div class="input-container-password">
+                    <label for="password">Contrasenya</label>
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Introdueix la teva contrasenya"
+                        autocomplete="current-password"
+                    >
+
+                    <div class="forgot-password">
+                        <span id="forgot-password-link" role="button" tabindex="0">
+                            Has oblidat la contrasenya?
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CODI OTP -->
+            
+            <section id="otp-section" hidden>
+
+                <p class="recovery-description">
+                    T'hem enviat un correu amb un codi de 6 dígits.
+                    Escriu-lo aquí per restablir la contrasenya.
+                </p>
+
+                <div class="otp-container">
+                    <input class="otp-input" type="text" inputmode="numeric" maxlength="1" aria-label="Primer dígit">
+                    <input class="otp-input" type="text" inputmode="numeric" maxlength="1" aria-label="Segon dígit">
+                    <input class="otp-input" type="text" inputmode="numeric" maxlength="1" aria-label="Tercer dígit">
+                    <input class="otp-input" type="text" inputmode="numeric" maxlength="1" aria-label="Quart dígit">
+                    <input class="otp-input" type="text" inputmode="numeric" maxlength="1" aria-label="Cinquè dígit">
+                    <input class="otp-input" type="text" inputmode="numeric" maxlength="1" aria-label="Sisè dígit">
+                </div>
+
+                <div class="otp-resend-container">
+                    <span>No t'arriba?</span>
+                    <span id="otp-resend-message" class="otp-resend-message"></span>
+
+                    <button type="button" id="resend-otp" class="resend-otp" hidden>
+                        Reenviar codi
+                    </button>
+                </div>
+
+            </section>
+
+            <!-- NOVA CONTRASENYA -->
+            <section id="reset-password-section" hidden>
+
+                <label for="new-password">Nova contrasenya</label>
+                <input
+                    id="new-password"
+                    type="password"
+                    autocomplete="new-password"
+                    minlength="8"
+                    placeholder="Introdueix la nova contrasenya"
+                >
+
+                <label for="confirm-password">Confirma la contrasenya</label>
+                <input
+                    id="confirm-password"
+                    type="password"
+                    autocomplete="new-password"
+                    minlength="8"
+                    placeholder="Repeteix la contrasenya"
+                >
+
+            </section>
+
+            <section id="password-updated-section" hidden>
+                <span class="material-symbols-outlined password-updated-icon">
+                    lock_open
+                </span>
+
+                <h2>Contrasenya actualitzada correctament</h2>
+
+                <p>
+                    Fes següent per tornar a iniciar sessió amb la nova contrasenya
+                </p>
+            </section>
+
+            <!-- MISSATGES -->
+            <div id="login-error" class="login-error" role="alert" aria-live="polite">
+                <span class="material-symbols-outlined">warning</span>
+                <span id="login-error-message"></span>
+            </div>
+
+            <section id="request-sent" class="request-sent" aria-live="polite" hidden>
+                <span class="material-symbols-outlined">mark_email_read</span>
+                <h2>Sol·licitud enviada</h2>
+                <p>
+                    Hem rebut la teva sol·licitud d'accés a SMartorell.
+                    L'administrador la revisarà i rebràs un correu quan
+                    puguis accedir-hi.
+                </p>
+                <p class="request-email">
+                    Correu: <span id="request-email-display"></span>
+                </p>
+            </section>
+
+            <button type="submit" class="login-button" aria-label="Continuar">
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+
         </form>
+
     </main>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="module" src="./login.js"></script>
+
 </body>
 </html>

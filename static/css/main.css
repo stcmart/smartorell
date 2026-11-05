@@ -1010,6 +1010,58 @@ html, body {
     color: white;
 }
 
+/* Xarxes: accordion TO ADD V.1.1.0 */
+
+.network-header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.network-arrow {
+    transition: transform 0.2s ease;
+}
+
+.network-layers[hidden] {
+    display: none !important;
+}
+
+.layer-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.charger-refresh {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 4px;
+    color: inherit;
+    display: flex;
+    align-items: center;
+}
+
+.charger-refresh:hover {
+    opacity: 0.7;
+}
+
+.charger-refresh.loading span {
+    animation: charger-spin 1s linear infinite;
+}
+
+@keyframes charger-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.charger-refresh:disabled {
+    cursor: wait;
+    opacity: 0.5;
+}
+
 /* =========================================
    RESPONSIVE
 ========================================= */

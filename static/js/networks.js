@@ -1,279 +1,241 @@
 import { supabaseClient } from '../../auth/supabase.js';
-
+import { checkAuth } from '../../auth/auth.js';
 import { map } from './map.js';
+import { loadLayer as loadSupabaseLayer } from './layer-manager.js';
+import './led-sms.js';
+import {
+    checkEtecnicToken,
+    refreshChargers,
+    getChargersLayer
+} from './evtecnic-manager.js';
 
-import { loadQuadres } from './quadres.js';
-import { loadSenyalitzacioLED } from './senyalitzacio_LED.js';
-
-
-// =========================================================
-// LOADERS DE CAPES
-// =========================================================
-
-const layerLoaders = {
-    quadres: loadQuadres,
-    senyalitzacio_led: loadSenyalitzacioLED
-};
-
-
-// Capes actualment carregades
 const activeLayers = {};
-
-
-// SIMs de la senyalització
-let senyalitzacioSims = {
-    tancament: [],
-    prohibicio: []
-};
-
 
 // =========================================================
 // CARREGAR XARXES
 // =========================================================
 
 async function loadNetworks() {
+    const container = document.getElementById('networks');
+    if (!container) return;
 
-    const container =
-        document.getElementById('networks');
+    const profile = await checkAuth();
 
-    if (!container) {
-        console.error('No s\'ha trobat #networks');
-        return;
-    }
+    if (!profile) return;
 
-
-    const { data, error } =
-        await supabaseClient
-            .from('xarxes')
-            .select(`
+    const hasEtecnicToken = await checkEtecnicToken();
+    
+    const { data, error } = await supabaseClient
+        .from('xarxes')
+        .select(`
+            id,
+            nom,
+            description,
+            layers (
                 id,
-                nom,
-                description,
-                layers (
-                    id,
-                    table_name,
-                    name,
-                    layer_description
-                )
-            `);
-
+                table_name,
+                name,
+                layer_description,
+                roles_allowed
+            )
+        `);
 
     if (error) {
-
-        console.error(
-            'Error carregant xarxes:',
-            error
-        );
-
+        console.error('Error carregant xarxes:', error);
         return;
     }
 
-
-    renderNetworks(data);
+    renderNetworks(data, profile.role, hasEtecnicToken);
 }
 
-
 // =========================================================
-// RENDER TREE
+// RENDERITZAR XARXES
 // =========================================================
 
-function renderNetworks(networks) {
-
-    const container =
-        document.getElementById('networks');
-
+function renderNetworks(networks, userRole, hasEtecnicToken) {
+    const container = document.getElementById('networks');
     if (!container) return;
 
     container.innerHTML = '';
 
-
     networks.forEach(network => {
-
-        const networkElement =
-            document.createElement('div');
-
-        networkElement.className =
-            'network-item';
-
+        const networkElement = document.createElement('div');
+        networkElement.className = 'network-item';
 
         networkElement.innerHTML = `
-            <div class="network-header">
-
+            <div class="network-header" aria-expanded="false">
                 <span class="material-symbols-outlined network-arrow">
                     expand_more
                 </span>
-
-                <span class="network-name">
-                    ${network.nom}
-                </span>
-
+                <span class="network-name"></span>
             </div>
-
-            <div class="network-layers"></div>
+            <div class="network-layers" hidden></div>
         `;
 
+        networkElement.querySelector('.network-name').textContent = network.nom;
 
-        const layersContainer =
-            networkElement.querySelector(
-                '.network-layers'
-            );
+        const header = networkElement.querySelector('.network-header');
+        const arrow = networkElement.querySelector('.network-arrow');
+        const layersContainer = networkElement.querySelector('.network-layers');
 
+        header.addEventListener('click', () => {
+            const isOpening = layersContainer.hidden;
+            layersContainer.hidden = !isOpening;
 
-        network.layers.forEach(layer => {
-
-            const layerElement =
-                document.createElement('div');
-
-            layerElement.className =
-                'layer-item';
-
-
-            layerElement.innerHTML = `
-                <span class="layer-name">
-                    ${layer.name}
-                </span>
-
-                <label class="layer-toggle">
-
-                    <input
-                        type="checkbox"
-                        checked
-                        data-layer-id="${layer.id}"
-                        data-table="${layer.table_name}"
-                    >
-
-                    <span class="slider"></span>
-
-                </label>
-            `;
-
-
-            layersContainer.appendChild(
-                layerElement
-            );
-
-
-            loadLayer(layer);
-
-
-            // Llegenda de la capa LED
-            if (
-                layer.table_name.toLowerCase() ===
-                'senyalitzacio_led'
-            ) {
-
-                layersContainer.appendChild(
-                    createSenyalitzacioLegend()
-                );
-
-            }
-
+            header.setAttribute('aria-expanded', String(isOpening));
+            arrow.textContent = isOpening ? 'expand_less' : 'expand_more';
         });
 
+        (network.layers ?? []).forEach(layer => {
+            if (
+                layer.roles_allowed?.length &&
+                !layer.roles_allowed.includes(userRole)
+            ) return;
 
-        container.appendChild(
-            networkElement
-        );
+            const isEtecnic = layer.table_name?.toLowerCase() === 'evtecnic';
 
+            if (isEtecnic && !hasEtecnicToken) return;
+
+            const layerElement = document.createElement('div');
+            layerElement.className = 'layer-item';
+           
+            const detailsContainer = document.createElement('div');
+            detailsContainer.className = 'layer-details';
+            detailsContainer.hidden = true;
+            detailsContainer.dataset.layerId = layer.id;
+
+            layerElement.innerHTML = `
+                <span class="layer-name"></span>
+                <div class="layer-controls">
+                    ${isEtecnic ? `
+                        <button
+                            class="charger-refresh"
+                            type="button"
+                            title="Actualitzar carregadors"
+                            aria-label="Actualitzar carregadors"
+                            data-layer-id="${layer.id}">
+                            <span class="material-symbols-outlined">sync</span>
+                        </button>
+                    ` : ''}
+                    <label class="layer-toggle">
+                        <input
+                            type="checkbox"
+                            data-layer-id="${layer.id}"
+                            data-table="${layer.table_name}">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            `;
+
+            layerElement.querySelector('.layer-name').textContent = layer.name;
+
+            
+            layersContainer.appendChild(layerElement);
+            layersContainer.appendChild(detailsContainer);
+            
+        });
+
+        container.appendChild(networkElement);
     });
 }
 
 // =========================================================
-// CARREGAR CAPA LEAFLET
+// CARREGAR CAPA
 // =========================================================
 
-async function loadLayer(layer) {
+async function loadLayer(layer, detailsContainer) {
+    const layerId = Number(layer.id);
+    const tableName = layer.table_name?.toLowerCase();
 
-    const tableName =
-        layer.table_name.toLowerCase();
+    if (tableName === 'evtecnic') return;
 
-
-    const loader =
-        layerLoaders[tableName];
-
-
-    if (!loader) {
-
-        console.warn(
-            'No existeix loader per:',
-            tableName
-        );
-
+    if (activeLayers[layerId]) {
+        map.addLayer(activeLayers[layerId]);
         return;
     }
 
-
-    const leafletLayer =
-        await loader();
-
-
-    if (!leafletLayer) {
-
-        console.warn(
-            'La capa no ha retornat cap Leaflet layer:',
-            tableName
-        );
-
-        return;
-    }
-
-
-    console.log(
-        'Layer carregada:',
-        tableName,
-        leafletLayer
+    const leafletLayer = await loadSupabaseLayer(
+        layerId,
+        detailsContainer
     );
 
-
-    activeLayers[layer.id] =
-        leafletLayer;
-
-
-    // Visible inicialment
-    map.addLayer(leafletLayer);
+    if (leafletLayer) {
+        activeLayers[layerId] = leafletLayer;
+    }
 }
 
-
 // =========================================================
-// TOGGLE CAPES
+// TOGGLES I ACTUALITZACIÓ
 // =========================================================
 
-document.addEventListener(
-    'change',
-    event => {
+document.addEventListener('click', async event => {
+    const button = event.target.closest('.charger-refresh');
+    if (!button) return;
 
-        const input =
-            event.target.closest(
-                '.layer-toggle input'
-            );
+    const layer = await refreshChargers(button.dataset.layerId);
 
-
-        if (!input) return;
-
-
-        const layerId =
-            input.dataset.layerId;
+    if (layer) {
+        activeLayers[button.dataset.layerId] = layer;
+    }
+});
 
 
-        const layer =
-            activeLayers[layerId];
+document.addEventListener('change', async event => {
+    const input = event.target.closest('.layer-toggle input');
+    if (!input) return;
 
+    const layerId = Number(input.dataset.layerId);
 
-        if (!layer) return;
+    const detailsContainer = document.querySelector(
+        `.layer-details[data-layer-id="${layerId}"]`
+    );
 
+    if (input.checked) {
+        input.disabled = true;
 
-        if (input.checked) {
+        try {
+            const layerData = {
+                id: layerId,
+                table_name: input.dataset.table
+            };
 
-            map.addLayer(layer);
+            if (layerData.table_name.toLowerCase() === 'evtecnic') {
+                const layer = getChargersLayer() ||
+                    await refreshChargers(layerId);
 
-        } else {
+                if (layer) {
+                    map.addLayer(layer);
+                    activeLayers[layerId] = layer;
+                }
+            } else {
+                await loadLayer(layerData, detailsContainer);
+            }
 
-            map.removeLayer(layer);
+            if (activeLayers[layerId]) {
+                if (detailsContainer) {
+                    detailsContainer.hidden = false;
+                }
+            } else {
+                input.checked = false;
+            }
 
+        } catch (error) {
+            console.error('Error activant capa:', error);
+            input.checked = false;
+        } finally {
+            input.disabled = false;
         }
 
+    } else {
+        const layer = activeLayers[layerId];
+
+        if (layer) map.removeLayer(layer);
+
+        if (detailsContainer) {
+            detailsContainer.hidden = true;
+        }
     }
-);
+});
 
 
 // =========================================================
@@ -281,318 +243,29 @@ document.addEventListener(
 // =========================================================
 
 function setupNetworksMenu() {
+    const button = document.getElementById('networksButton');
+    const container = document.getElementById('networks');
 
-    const button =
-        document.getElementById('networksButton');
+    if (!button || !container) return;
 
-    const container =
-        document.getElementById('networks');
+    button.addEventListener('click', () => {
+        container.hidden = !container.hidden;
 
-
-    if (!button || !container) {
-
-        console.error(
-            'No s\'ha trobat el menú Xarxes'
+        const arrow = button.querySelector(
+            '.arrow .material-symbols-outlined'
         );
 
-        return;
-    }
-
-
-    button.addEventListener(
-        'click',
-        () => {
-
-            container.hidden =
-                !container.hidden;
-
-
-            const arrow =
-                button.querySelector(
-                    '.arrow .material-symbols-outlined'
-                );
-
-
-            if (arrow) {
-
-                arrow.textContent =
-                    container.hidden
-                        ? 'arrow_drop_down'
-                        : 'arrow_drop_up';
-
-            }
-
+        if (arrow) {
+            arrow.textContent = container.hidden
+                ? 'arrow_drop_down'
+                : 'arrow_drop_up';
         }
-    );
+    });
 }
-
-
-// =========================================================
-// SIMS SENYALITZACIÓ
-// =========================================================
-
-async function loadSenyalitzacioSims() {
-
-    const { data, error } =
-        await supabaseClient
-            .rpc(
-                'get_senyalitzacio_led_sims'
-            );
-
-
-    if (error) {
-
-        console.error(
-            'Error carregant SIMs de senyalització:',
-            error
-        );
-
-        return;
-    }
-
-
-    senyalitzacioSims =
-        data;
-
-
-    console.log(
-        'SIMs senyalització:',
-        senyalitzacioSims
-    );
-}
-
-
-// =========================================================
-// LLEGENDA SENYALITZACIÓ LED
-// =========================================================
-
-function createSenyalitzacioLegend() {
-
-    const legend =
-        document.createElement('div');
-
-
-    legend.className =
-        'led-legend';
-
-
-    legend.innerHTML = `
-
-        <div class="led-group">
-
-            <div class="led-info">
-
-                <span class="led-symbol led-red"></span>
-
-                <span>
-                    Tancament del gual inundable
-                </span>
-
-            </div>
-
-
-            <div class="led-actions">
-
-                <button
-                    class="led-sms-button led-on"
-                    data-led-group="tancament"
-                    data-message="ON">
-                    ON
-                </button>
-
-
-                <button
-                    class="led-sms-button led-off"
-                    data-led-group="tancament"
-                    data-message="OFF">
-                    OFF
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <div class="led-group">
-
-            <div class="led-info">
-
-                <span class="led-symbol led-yellow"></span>
-
-                <span>
-                    Prohibició parking risc inundació
-                </span>
-
-            </div>
-
-
-            <div class="led-actions">
-
-                <button
-                    class="led-sms-button led-on"
-                    data-led-group="prohibicio"
-                    data-message="ON">
-                    ON
-                </button>
-
-
-                <button
-                    class="led-sms-button led-off"
-                    data-led-group="prohibicio"
-                    data-message="OFF">
-                    OFF
-                </button>
-
-            </div>
-
-        </div>
-
-    `;
-
-
-    return legend;
-}
-
-
-// =========================================================
-// SMS GRUPALS
-// =========================================================
-
-document.addEventListener(
-    'click',
-    event => {
-
-        const button =
-            event.target.closest(
-                '.led-sms-button'
-            );
-
-        if (!button) return;
-
-
-        const group =
-            button.dataset.ledGroup;
-
-
-        const message =
-            button.dataset.message;
-
-
-        const sims =
-            senyalitzacioSims[group] || [];
-
-
-        if (!sims.length) {
-
-            console.warn(
-                `No hi ha SIMs per al grup: ${group}`
-            );
-
-            return;
-        }
-
-
-        /*
-         * Detectar dispositiu
-         */
-
-        const userAgent =
-            navigator.userAgent ||
-            navigator.vendor ||
-            window.opera;
-
-
-        const isIOS =
-            /iPad|iPhone|iPod/i.test(userAgent) ||
-            (
-                navigator.platform === 'MacIntel' &&
-                navigator.maxTouchPoints > 1
-            );
-
-
-        const isAndroid =
-            /Android/i.test(userAgent);
-
-
-        /*
-         * Preparar destinataris
-         *
-         * Exemple:
-         * ["600111111", "600222222", "600333333"]
-         *
-         * es converteix en:
-         * 600111111,600222222,600333333
-         */
-
-        const recipients =
-            sims
-                .map(numero => String(numero).trim())
-                .filter(numero => numero !== '')
-                .join(',');
-
-        const encodedMessage =
-            encodeURIComponent(message);
-
-        console.log("DESTINATARIS:", recipients);
-        console.log("TOTAL:", sims.length);
-        console.log("SMS:", `sms:${recipients}?body=${encodedMessage}`);
-
-
-        let smsURL;
-
-
-        /*
-         * iOS
-         */
-
-        if (isIOS) {
-
-            smsURL =
-                `sms:${recipients}&body=${encodedMessage}`;
-
-        }
-
-
-        /*
-         * Android
-         */
-
-        else if (isAndroid) {
-
-            smsURL =
-                `sms:${recipients}?body=${encodedMessage}`;
-
-        }
-
-
-        /*
-         * Altres dispositius
-         */
-
-        else {
-
-            smsURL =
-                `sms:${recipients}?body=${encodedMessage}`;
-
-        }
-
-
-        /*
-         * Obrir aplicació SMS
-         */
-
-        window.location.href =
-            smsURL;
-
-    }
-);
 
 // =========================================================
 // INICI
 // =========================================================
 
-loadNetworks();
-
 setupNetworksMenu();
-
-loadSenyalitzacioSims();
+loadNetworks();
