@@ -11,7 +11,7 @@ let chargersLayer = null;
 const STATUS = {
     '0': { text: 'Disponible', color: '#64bd63' },
     '1': { text: 'Carregant', color: '#5dc4bf' },
-    '3': { text: 'Fora de servei', color: '#900c3f' },
+    '3': { text: 'Fora de servei', color: '#555555' },
     '9': { text: 'Error', color: '#dd5826' }
 };
 
