@@ -1,6 +1,6 @@
-
 import { supabaseClient } from '../../auth/supabase.js';
-import { map } from './map.js';
+import { map } from './maps.js';
+import { renderFeature } from './layer-renderer.js';
 
 let chargersLayer = null;
 
@@ -86,33 +86,43 @@ function createPopup(charger) {
 // MARCADORS
 // =========================================================
 
-function addEvtecnicMarkers(layerGroup, chargers) {
-    const markers = [];
+function addEvtecnicMarkers(layerGroup, chargers, styleConfig) {
 
-    chargers.forEach(charger => {
-        const lat = Number(charger.latitude);
-        const lng = Number(charger.longitude);
+    const geojson = {
+        type: 'FeatureCollection',
+        features: chargers
+            .filter(charger =>
+                Number.isFinite(Number(charger.latitude)) &&
+                Number.isFinite(Number(charger.longitude))
+            )
+            .map(charger => ({
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [
+                        Number(charger.longitude),
+                        Number(charger.latitude)
+                    ]
+                },
+                properties: {
+                    ...charger,
+                    id_status: String(charger.id_status)
+                }
+            }))
+    };
 
-        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+    const layer = L.geoJSON(geojson, {
 
-        const status = getStatus(charger.id_status);
+        pointToLayer(feature, latlng) {
+            return renderFeature(feature, latlng, styleConfig);
+        },
 
-        const marker = L.circleMarker([lat, lng], {
-            radius: 7,
-            color: '#ffffff',
-            weight: 2,
-            opacity: 1,
-            fillColor: status.color,
-            fillOpacity: 1
-        });
-
-        marker.bindPopup(createPopup(charger));
-
-        layerGroup.addLayer(marker);
-        markers.push(marker);
+        onEachFeature(feature, marker) {
+            marker.bindPopup(createPopup(feature.properties));
+        }
     });
 
-    return markers;
+    layerGroup.addLayer(layer);
 }
 
 // =========================================================
@@ -140,13 +150,18 @@ async function loadChargers() {
                 await functionError.context.text()
             );
         }
-
         return [];
     }
 
-    console.log('Carregadors rebuts:', data?.chargers);
+    console.log('Carregadors rebuts (no filtrats):', data?.chargers);
 
-    return data?.chargers ?? [];
+    const chargers_filters = data?.chargers?.filter(
+        charger => charger.mobile_app_manage === true
+    );
+
+    console.log ('Carregadors filtrats:', chargers_filters);
+
+    return chargers_filters ?? [];
 }
 
 // =========================================================
@@ -179,6 +194,7 @@ export async function checkEtecnicToken() {
 // =========================================================
 
 export async function refreshChargers(layerId) {
+
     const button = document.querySelector(
         `.charger-refresh[data-layer-id="${layerId}"]`
     );
@@ -189,16 +205,28 @@ export async function refreshChargers(layerId) {
     button.classList.add('loading');
 
     try {
-        const chargers = await loadChargers();
+        
+        const [chargers, styleConfig] = await Promise.all([
+            loadChargers(),
+            getChargerStyle(layerId)
+        ]);
 
-        if (!chargers) return null;
+        if (!styleConfig) {
+            console.error('No hi ha configuració JSONB per als carregadors.');
+            return null;
+        }
 
         if (!chargersLayer) {
             chargersLayer = L.layerGroup();
         }
 
         chargersLayer.clearLayers();
-        addEvtecnicMarkers(chargersLayer, chargers);
+
+        addEvtecnicMarkers(
+            chargersLayer,
+            chargers,
+            styleConfig
+        );
 
         const checkbox = document.querySelector(
             `.layer-toggle input[data-layer-id="${layerId}"]`
@@ -218,6 +246,27 @@ export async function refreshChargers(layerId) {
         button.disabled = false;
         button.classList.remove('loading');
     }
+}
+
+// =========================================================
+// SIMBOLITZACIÓ DES DE SUPABASE
+// =========================================================
+
+async function getChargerStyle(layerId) {
+
+    const { data, error } = await supabaseClient
+        .schema('management')
+        .from('layer_styles')
+        .select('config')
+        .eq('layer_id', layerId)
+        .maybeSingle();
+
+    if (error) {
+        console.error('Error carregant simbolització:', error);
+        return null;
+    }
+
+    return data?.config ?? null;
 }
 
 // =========================================================

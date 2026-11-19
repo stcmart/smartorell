@@ -1,4 +1,4 @@
-import { map } from './map.js';
+import { map } from './maps.js';
 
 /* Sidebar toogle */
 const sidebar = document.getElementById("sidebar");

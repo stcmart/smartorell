@@ -1,6 +1,6 @@
 import { supabaseClient } from '../../auth/supabase.js';
 import { checkAuth } from '../../auth/auth.js';
-import { map } from './map.js';
+import { map } from './maps.js';
 import { loadLayer as loadSupabaseLayer } from './layer-manager.js';
 import './led-sms.js';
 import {
@@ -11,10 +11,7 @@ import {
 
 const activeLayers = {};
 
-// =========================================================
-// CARREGAR XARXES
-// =========================================================
-
+// Load networks and layers
 async function loadNetworks() {
     const container = document.getElementById('networks');
     if (!container) return;
@@ -26,6 +23,7 @@ async function loadNetworks() {
     const hasEtecnicToken = await checkEtecnicToken();
     
     const { data, error } = await supabaseClient
+        .schema('management')
         .from('xarxes')
         .select(`
             id,
@@ -48,10 +46,7 @@ async function loadNetworks() {
     renderNetworks(data, profile.role, hasEtecnicToken);
 }
 
-// =========================================================
-// RENDERITZAR XARXES
-// =========================================================
-
+// Render layers
 function renderNetworks(networks, userRole, hasEtecnicToken) {
     const container = document.getElementById('networks');
     if (!container) return;
@@ -139,9 +134,7 @@ function renderNetworks(networks, userRole, hasEtecnicToken) {
     });
 }
 
-// =========================================================
-// CARREGAR CAPA
-// =========================================================
+// Load layers
 
 async function loadLayer(layer, detailsContainer) {
     const layerId = Number(layer.id);
@@ -164,9 +157,7 @@ async function loadLayer(layer, detailsContainer) {
     }
 }
 
-// =========================================================
-// TOGGLES I ACTUALITZACIÓ
-// =========================================================
+// Toogles and updates
 
 document.addEventListener('click', async event => {
     const button = event.target.closest('.charger-refresh');
@@ -178,7 +169,6 @@ document.addEventListener('click', async event => {
         activeLayers[button.dataset.layerId] = layer;
     }
 });
-
 
 document.addEventListener('change', async event => {
     const input = event.target.closest('.layer-toggle input');
@@ -237,10 +227,7 @@ document.addEventListener('change', async event => {
     }
 });
 
-
-// =========================================================
-// MENÚ XARXES
-// =========================================================
+// Networks menu
 
 function setupNetworksMenu() {
     const button = document.getElementById('networksButton');
@@ -263,9 +250,7 @@ function setupNetworksMenu() {
     });
 }
 
-// =========================================================
-// INICI
-// =========================================================
+// Initialization
 
 setupNetworksMenu();
 loadNetworks();
