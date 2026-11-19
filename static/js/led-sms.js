@@ -4,9 +4,9 @@ import { supabaseClient } from '../../auth/supabase.js';
 let senyalitzacioSims = {};
 
 export async function loadSenyalitzacioSims() {
-    const { data, error } = await supabaseClient.rpc(
-        'get_senyalitzacio_led_sims'
-    );
+    const { data, error } = await supabaseClient
+    .schema('gis')
+    .rpc('get_senyalitzacio_led_sims');
 
     if (error) {
         console.error('Error carregant SIMs:', error);

@@ -23,6 +23,7 @@ async function loadNetworks() {
     const hasEtecnicToken = await checkEtecnicToken();
     
     const { data, error } = await supabaseClient
+        .schema('management')
         .from('xarxes')
         .select(`
             id,

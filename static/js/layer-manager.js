@@ -27,6 +27,7 @@ async function getExpedientUrl(storage, filename) {
 export async function loadLayerConfig(layerId) {
 
     const { data, error } = await supabaseClient
+        .schema('management')
         .rpc('get_layer_config', {
             p_layer_id: layerId
         });

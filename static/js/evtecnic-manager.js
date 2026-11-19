@@ -255,6 +255,7 @@ export async function refreshChargers(layerId) {
 async function getChargerStyle(layerId) {
 
     const { data, error } = await supabaseClient
+        .schema('management')
         .from('layer_styles')
         .select('config')
         .eq('layer_id', layerId)
