@@ -1,0 +1,146 @@
+
+/* Escale and attribution */
+.map-info-control {
+    display: flex;
+    align-items: center;
+    height: 19px;
+    gap: 4px;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+.map-info-control .leaflet-control-scale {
+    margin: 0;
+}
+
+.leaflet-control-attribution {
+    display: none;
+}
+
+.map-attribution-info {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 19px;
+    border-radius: 2px;
+    background: rgba(255,255,255,.7);
+    color: inherit;
+    font-size: inherit;
+    line-height: 19px;
+    white-space: nowrap;
+}
+
+.map-attribution-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 19px;
+    height: 19px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 20px;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.map-attribution-button .material-symbols-outlined {
+    display: block;
+    color: inherit;
+    font-size: 15px;
+    line-height: 19px;
+    transition: opacity .15s ease, transform .15s ease;
+}
+
+.map-attribution-button:hover .material-symbols-outlined {
+    opacity: .65;
+}
+
+.map-attribution-panel {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    display: none;
+    align-items: center;
+    height: 19px;
+    padding: 0 6px;
+    border-radius: 0 2px 2px 0;
+    background: rgba(255,255,255,.7);
+    color: inherit;
+    font: inherit;
+    font-size: 10px;
+    line-height: 19px;
+    gap: 1.5px;
+    white-space: nowrap;
+}
+
+.map-attribution-info.open .map-attribution-panel {
+    display: flex;
+}
+
+/* Popups */
+
+.leaflet-popup-content-wrapper {
+    border-radius: 12px;
+}
+
+.leaflet-popup-content {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.popup-title {
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.popup-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+}
+
+.popup-body div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.popup-body b {
+    font-weight: 600;
+}
+
+/* Carregadors EVtecnic */
+
+.evtecnic-popup h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+}
+
+.evtecnic-popup p {
+    margin: 6px 0;
+}
+
+.evtecnic-sockets {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.evtecnic-sockets th,
+.evtecnic-sockets td {
+    padding: 7px 9px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.evtecnic-sockets th {
+    background: #f2f4f7;
+}

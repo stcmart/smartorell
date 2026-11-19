@@ -1,16 +1,30 @@
 import { supabaseClient } from '../../auth/supabase.js';
-import { map } from './map.js';
+import { map } from './maps.js';
 import { renderLayer } from './layer-renderer.js';
 
 // Memòria cau
 const layerCache = {};
 
+// Expedient del quadre 
+async function getExpedientUrl(storage, filename) {
+
+    const { data, error } = await supabaseClient
+        .storage
+        .from(storage)
+        .createSignedUrl(filename, 300, {
+            download: true
+        });
+
+    if (error) {
+        console.error('Error generant URL expedient:', error);
+        return null;
+    }
+
+    return data.signedUrl;
+}
+
 /* Carrega les dades i configuracions d'una capa. */
 export async function loadLayerConfig(layerId) {
-
-    /* if (layerCache[layerId]) {
-        return layerCache[layerId];
-    } */
 
     const { data, error } = await supabaseClient
         .rpc('get_layer_config', {
@@ -31,14 +45,6 @@ export async function loadLayerConfig(layerId) {
     if (typeof config.data === 'string') {
         config.data = JSON.parse(config.data);
     }
-
-    console.log('RESPOSTA SUPABASE:', data);
-    console.log('ERROR SUPABASE:', error);
-
-    console.log('CONFIG RPC:', config);
-    console.log('STYLES:', config.styles);
-    console.log('POPUPS:', config.popups);
-
     layerCache[layerId] = config;
     return config;  
 }
@@ -48,7 +54,10 @@ export async function loadLayer(layerId, controlsContainer = null) {
     const config = await loadLayerConfig(layerId);
     if (!config) return null;
 
-    const layer = renderLayer(config, controlsContainer);
+    const layer = renderLayer({
+        ...config,
+        getExpedientUrl
+    }, controlsContainer);
 
     if (layer) layer.addTo(map);
 

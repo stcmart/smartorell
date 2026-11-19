@@ -1,4 +1,4 @@
-import { map } from './map.js';
+import { map } from './maps.js';
 
 const mapInfoControl = L.control({
     position: 'bottomleft'
@@ -11,28 +11,17 @@ mapInfoControl.onAdd = function (map) {
         'map-info-control'
     );
 
-
-    // =========================
-    // ESCALA LEAFLET
-    // =========================
-
     const scaleControl = L.control.scale({
         metric: true,
         imperial: false,
         maxWidth: 100
     });
 
-    // IMPORTANT:
-    // Afegim realment el control al mapa perquè
-    // Leaflet inicialitzi correctament _map i els seus events.
     scaleControl.addTo(map);
 
-    // Recuperem el seu element HTML
     const scaleElement = scaleControl.getContainer();
 
-    // El movem dins del nostre contenidor
     container.appendChild(scaleElement);
-
 
     // =========================
     // BOTÓ INFO

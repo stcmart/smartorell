@@ -1,4 +1,17 @@
-import { map } from './map.js';
+const map = L.map("map", {
+    zoomControl: false,
+    minZoom: 0,
+    maxZoom: 18,
+    rotate: true,
+    touchRotate: true,
+    shiftKeyRotate: true,
+    dragRotate: true
+}).setView(
+    [41.4747, 1.9292],
+    14
+);
+
+export { map };
 
 /* Basemaps available */ 
 const icgcTopografic = L.tileLayer.wms(
@@ -77,14 +90,14 @@ document.querySelectorAll('input[name="basemap"]').forEach(radio => {
             return;
         }
 
-        /* Eliminar tots els basemaps */
+        /* Removing basemaps */
         map.removeLayer(icgcTopografic);
         map.removeLayer(icgcTopograficGris);
         map.removeLayer(icgcEstandardGris);
         map.removeLayer(icgcSimplificat);
         map.removeLayer(icgcOrtofoto);
 
-        /* Activar el seleccionat */
+        /* Active map */
         switch (this.value) {
             case "icgcTopografic":
                 icgcTopografic.addTo(map);
