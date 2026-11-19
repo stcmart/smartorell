@@ -547,37 +547,11 @@ function renderPopup(feature, layer, config, getExpedientUrl) {
         html += `<h3>${title}</h3>`;
     }
 
-    // Camps configurats al JSONB
+    // Camps normals
     (config.fields ?? []).forEach(item => {
 
         const value = properties[item.field] ?? '';
 
-        // Camp de tipus document
-        if (item.type === 'document') {
-
-            if (!value) return;
-
-            const filename = (item.filename ?? '')
-                .replaceAll('{quadre_id}', properties.quadre_id ?? '');
-
-            html += `
-                <div>
-                    <strong>${escapeHTML(item.label)}:</strong>
-                    <a
-                        href="#"
-                        class="popup-document-link"
-                        data-storage="${escapeHTML(item.storage)}"
-                        data-filename="${escapeHTML(filename)}"
-                    >
-                        ${escapeHTML(String(value))}
-                    </a>
-                </div>
-            `;
-
-            return;
-        }
-
-        // Camps normals
         html += `
             <div>
                 <strong>${escapeHTML(item.label)}:</strong>
@@ -585,6 +559,30 @@ function renderPopup(feature, layer, config, getExpedientUrl) {
             </div>
         `;
     });
+
+    // Documents
+    for (const item of config.documents ?? []) {
+
+        const filename = (item.filename ?? '')
+            .replaceAll('{quadre_id}', properties.quadre_id ?? '')
+            .replaceAll('{ritsic}', properties.ritsic ?? '');
+
+        if (!filename) continue;
+
+        html += `
+            <div>
+                <strong>${escapeHTML(item.label)}:</strong>
+                <a
+                    href="#"
+                    class="popup-document-link"
+                    data-storage="${escapeHTML(item.storage)}"
+                    data-filename="${escapeHTML(filename)}"
+                >
+                    ${escapeHTML(String(properties[item.field] ?? ''))}
+                </a>
+            </div>
+        `;
+    }
 
     // Elements addicionals
     (config.elements ?? []).forEach(element => {
@@ -602,10 +600,6 @@ function renderPopup(feature, layer, config, getExpedientUrl) {
                 const url = (element.url ?? '')
                     .replaceAll('{value}', String(value).trim())
                     .replaceAll('{message}', encodeURIComponent(button.message ?? ''));
-                
-                
-                console.log('PROPERTIES POPUP:', properties);
-                console.log('SIM:', properties.sim);
 
                 html += `
                     <a
@@ -625,6 +619,7 @@ function renderPopup(feature, layer, config, getExpedientUrl) {
 
     layer.bindPopup(html);
 
+    // Carregar documents des de Storage
     layer.on('popupopen', async event => {
 
         const links = event.popup.getElement()
@@ -654,7 +649,6 @@ function renderPopup(feature, layer, config, getExpedientUrl) {
             link.dataset.ready = 'true';
         }
     });
-
 }
 // Escape HTML for security
 function escapeHTML(value) {
