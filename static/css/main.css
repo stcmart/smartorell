@@ -1,6 +1,7 @@
 @import url("./map.css");
 @import url("./sidebar.css");
 @import url("./controls.css");
+@import url('./popup.css');
 
 * {
     box-sizing: border-box;
@@ -159,34 +160,34 @@ body {
 /* ========================================
    RESPONSIVE
 ======================================== */
-
 @media (max-width: 768px) {
-    #map {
-        border-radius: 8px;
-    }
-
     #sidebar {
         top: 12px;
         left: 12px;
-        width: calc(100% - 24px);
+        width: calc(100% - 50px);
         max-height: calc(100vh - 24px);
         border-radius: 20px;
     }
 
     .sidebar-toggle {
-        top: auto;
+        position: fixed;
+        top: 10%;
+        left: calc(100% - 39px);
         right: auto;
-        bottom: 15px;
-        left: 0;
+        bottom: auto;
+        transform: translateY(-50%);
         width: 35px;
-        height: 35px;
-        border-radius: 0 18px 18px 0;
-        font-size: 25px;
+        height: 40px;
+        padding: 0;
+        border-radius: 0 10px 10px 0;
+        z-index: 1200;
+        display: flex;
         align-items: center;
+        justify-content: center;
     }
 
-    .sidebar-toggle.hidden {
-        right: auto;
-        left: 0;
+    /* Quan el sidebar està ocult */
+    #sidebar.hidden ~ .sidebar-toggle {
+        left: 12px;
     }
 }

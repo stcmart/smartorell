@@ -1,6 +1,6 @@
 import { supabaseClient } from '../../auth/supabase.js';
 import { map } from './maps.js';
-import { renderFeature } from './layer-renderer.js';
+import { renderFeature, selectFeature} from './layer-renderer.js';
 
 let chargersLayer = null;
 
@@ -47,7 +47,7 @@ function createPopup(charger) {
                 <td>${escapeHTML(socket.connector_type_name ?? '—')}</td>
                 <td>
                     <span style="color:${status.color};font-weight:600">
-                        ${status.text}
+                        ${escapeHTML(status.text)}
                     </span>
                 </td>
             </tr>
@@ -55,17 +55,18 @@ function createPopup(charger) {
     }).join('');
 
     return `
-        <div class="evtecnic-popup">
-            <h3>${escapeHTML(charger.name ?? 'Carregador')}</h3>
+        <div class="popup-field">
+            <strong>Carrer</strong>
+            <span>${escapeHTML(charger.address ?? 'No disponible')}</span>
+        </div>
 
-            <p>
-                <strong>Carrer:</strong>
-                ${escapeHTML(charger.address ?? 'No disponible')}
-            </p>
+        <div class="popup-field">
+            <strong>Tomes</strong>
+            <span>${sockets.length}</span>
+        </div>
 
-            <p>
-                <strong>Tomes:</strong> ${sockets.length}
-            </p>
+        <div class="popup-field popup-field--block">
+            <strong>Connectors i estats</strong>
 
             <table class="evtecnic-sockets">
                 <thead>
@@ -81,7 +82,6 @@ function createPopup(charger) {
         </div>
     `;
 }
-
 // =========================================================
 // MARCADORS
 // =========================================================
@@ -118,7 +118,18 @@ function addEvtecnicMarkers(layerGroup, chargers, styleConfig) {
         },
 
         onEachFeature(feature, marker) {
-            marker.bindPopup(createPopup(feature.properties));
+
+            const charger = feature.properties;
+
+            marker.on('click', () => {
+
+                selectFeature(
+                    marker,
+                    escapeHTML(charger.name ?? 'Carregador'),
+                    createPopup(charger)
+                );
+
+            });
         }
     });
 

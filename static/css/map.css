@@ -117,30 +117,25 @@
 }
 
 /* Carregadors EVtecnic */
-
-.evtecnic-popup h3 {
-    margin: 0 0 10px;
-    font-size: 16px;
-}
-
-.evtecnic-popup p {
-    margin: 6px 0;
-}
-
 .evtecnic-sockets {
     width: 100%;
-    margin-top: 10px;
     border-collapse: collapse;
-    font-size: 12px;
+    margin-top: 8px;
+    font-size: 13px;
 }
 
 .evtecnic-sockets th,
 .evtecnic-sockets td {
-    padding: 7px 9px;
-    border-bottom: 1px solid #ddd;
+    padding: 8px;
     text-align: left;
+    border-bottom: 1px solid #e5e7eb;
 }
 
-.evtecnic-sockets th {
-    background: #f2f4f7;
+.popup-field--block {
+    display: block;
+}
+
+.popup-field--block > strong {
+    display: block;
+    margin-bottom: 6px;
 }

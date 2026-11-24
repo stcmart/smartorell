@@ -122,23 +122,25 @@ mapInfoControl.addTo(map);
 const controls = document.getElementById("mapControls");
 const mapControlsToggle = document.getElementById("mapControlsToggle");
 
+function updateControlsToggle() {
+    const icon = mapControlsToggle.querySelector(".material-symbols-outlined");
+    const collapsed = controls.classList.contains("collapsed");
+
+    icon.textContent = collapsed
+        ? "keyboard_arrow_up"
+        : "keyboard_arrow_down";
+
+    mapControlsToggle.title = collapsed
+        ? "Mostrar controls"
+        : "Ocultar controls";
+}
+updateControlsToggle();
+
 mapControlsToggle.addEventListener("click", function () {
 
-    mapControls.classList.toggle("collapsed");
+    controls.classList.toggle("collapsed");
 
-    const icon = this.querySelector(".material-symbols-outlined");
-
-    if (mapControls.classList.contains("collapsed")) {
-
-        icon.textContent = "keyboard_arrow_up";
-        this.title = "Mostrar controls";
-
-    } else {
-
-        icon.textContent = "keyboard_arrow_down";
-        this.title = "Ocultar controls";
-
-    }
+    updateControlsToggle();
 });
 
 const mapControl = L.control({

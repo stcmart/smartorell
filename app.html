@@ -16,6 +16,31 @@
 
     <div id="map"></div>
 
+    <!-- Floating feature card -->
+    <aside
+        id="map-feature-card"
+        class="map-feature-card"
+        aria-label="Informació de l'element seleccionat"
+        aria-hidden="true"
+        hidden
+    >
+        <div class="map-feature-card__header">
+            <h3 class="map-feature-card__title" id="map-feature-title"></h3>
+            <button
+                type="button"
+                class="map-feature-card__close"
+                aria-label="Tancar informació"
+            >
+                &times;
+            </button>
+        </div>
+
+        <div class="map-feature-card__body" id="map-feature-content"></div>
+
+        <footer class="map-feature-card__footer" id="map-feature-actions"> </footer>
+
+    </aside>
+
     <aside id="sidebar">
 
         <div class="sidebar-header">
@@ -46,7 +71,6 @@
         <div class="separator"></div>
 
         <!-- Xarxes -->
-<!-- Xarxes -->
         <section class="menu-section">
 
             <button
@@ -184,13 +208,8 @@
 
     </aside>
 
-    <!-- Ocultar menú -->
-    <button id="sidebarToggle" class="sidebar-toggle" title="Ocultar menú">
-        <span class="material-symbols-outlined">arrow_back_ios</span>
-    </button>
-
     <!-- Controls mapa -->
-    <div id="mapControls" class="map-controls">
+    <div id="mapControls" class="map-controls collapsed">
 
         <div id="mapControlsButtons" class="map-controls-buttons">
 
@@ -215,6 +234,10 @@
             </button>
 
         </div>
+        
+        <button id="sidebarToggle" class="sidebar-toggle" title="Ocultar menú">
+            <span class="material-symbols-outlined">arrow_back_ios</span>
+        </button>
 
         <button id="mapControlsToggle" class="map-controls-toggle">
             <span class="material-symbols-outlined">

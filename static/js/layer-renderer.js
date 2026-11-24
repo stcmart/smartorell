@@ -1,3 +1,12 @@
+import { map } from './maps.js';
+
+// Configuration
+let popupCloseInitialized = false;
+let mapSelectionEventsInitialized = false;
+let selectedLayer = null;
+let selectionToken = 0;
+let selectedLayerRemoveHandler = null;
+
 // Simbology logic
 export function renderFeature(feature, latlng, config = {}) {
 
@@ -40,7 +49,6 @@ export function renderFeature(feature, latlng, config = {}) {
     return style;
 }
 // Get the symbol for a feature
-
 function getFeatureSymbol(feature, config = {}) {
 
     const base = config.symbol ?? {
@@ -80,7 +88,6 @@ function getFeatureSymbol(feature, config = {}) {
 }
 
 // Rules
-
 function matchRules(feature, config = {}) {
 
     if (config.renderer?.type === 'single') {
@@ -95,7 +102,7 @@ function matchRules(feature, config = {}) {
     );
 }
 
-
+// Filter
 function evaluateFilter(properties, filter) {
 
     if (filter.and) {
@@ -148,7 +155,6 @@ function evaluateFilter(properties, filter) {
 }
 
 // Icon maker
-
 function createFeatureIcon(symbol, feature = {}) {
 
     const source = symbol.source ?? 'material-symbols';
@@ -303,7 +309,6 @@ function getNestedValue(object, path) {
 }
 
 // Dynamic labels
-
 function renderLabels(feature, layer, config = {}) {
 
     if (!config.enabled) return;
@@ -382,7 +387,6 @@ function renderLabels(feature, layer, config = {}) {
 }
 
 // CSS validation for inline styles
-
 function safeCSS(value) {
 
     const text = String(value);
@@ -393,7 +397,6 @@ function safeCSS(value) {
 }
 
 // Main renderer
-
 export function renderLayer(config, controlsContainer = null) {
 
     if (!config?.data) {
@@ -450,8 +453,99 @@ export function renderLayer(config, controlsContainer = null) {
     });
 }
 
-// Legends
+// Popup renderer
+function renderPopup(feature, layer, config, getExpedientUrl) {
 
+    if (!config) return;
+
+    const properties = feature.properties ?? {};
+
+    const titleTemplate = config.title?.title ?? '';
+
+    const title = titleTemplate.replace(
+        /\{(\w+)\}/g,
+        (_, field) => escapeHTML(String(properties[field] ?? ''))
+    );
+
+    let html = '';
+
+    // Camps normals
+    (config.fields ?? []).forEach(item => {
+
+        const value = properties[item.field] ?? '';
+
+        html += `
+            <div class="popup-field">
+                <strong>${escapeHTML(item.label)}</strong>
+                <span>${escapeHTML(String(value))}</span>
+            </div>
+        `;
+    });
+
+    // Documents
+    for (const item of config.documents ?? []) {
+
+        const filename = (item.filename ?? '')
+            .replaceAll('{quadre_id}', properties.quadre_id ?? '')
+            .replaceAll('{ritsic}', properties.ritsic ?? '');
+
+        if (!filename) continue;
+
+        html += `
+            <div class="popup-field">
+                <strong>${escapeHTML(item.label)}</strong>
+                <a
+                    href="#"
+                    class="popup-document-link"
+                    data-storage="${escapeHTML(item.storage)}"
+                    data-filename="${escapeHTML(filename)}"
+                >
+                    ${escapeHTML(String(properties[item.field] ?? ''))}
+                </a>
+            </div>
+        `;
+    }
+
+    // Elements addicionals
+    (config.elements ?? []).forEach(element => {
+
+        if (element.type !== 'buttons') return;
+
+        const value = properties[element.field];
+
+        if (!value) return;
+
+        html += `<div class="${escapeHTML(element.class ?? '')}">`;
+
+        (element.buttons ?? []).forEach(button => {
+
+            const url = (element.url ?? '')
+                .replaceAll('{value}', String(value).trim())
+                .replaceAll('{message}', encodeURIComponent(button.message ?? ''));
+
+            html += `
+                <a
+                    href="${escapeHTML(url)}"
+                    class="${escapeHTML(element.class_button ?? '')}"
+                >
+                    ${escapeHTML(button.label ?? '')}
+                </a>
+            `;
+        });
+
+        html += '</div>';
+    });
+
+    initializePopupClose();
+    initializeMapSelectionEvents();
+
+    // Selecció del feature al fer clic
+    layer.on('click', () => {
+        selectFeature(layer, title, html, getExpedientUrl);
+    });
+}
+
+// Legends
 function renderLegends(legends, container) {
 
     legends.forEach(config => {
@@ -525,131 +619,196 @@ function renderActions(actions, container) {
     });
 }
 
-// Popup rendering
+// Map feature focus 
+function focusFeatureOnMap(layer, card) {
 
-function renderPopup(feature, layer, config, getExpedientUrl) {
+    if (!map || !layer) return;
 
-    if (!config) return;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const cardHeight = card.getBoundingClientRect().height;
 
-    const properties = feature.properties ?? {};
+    const bounds = typeof layer.getBounds === 'function'
+        ? layer.getBounds()
+        : null;
 
-    const titleTemplate = config.title?.title ?? '';
+    // =====================================================
+    // PUNTS
+    // =====================================================
 
-    const title = titleTemplate.replace(
-        /\{(\w+)\}/g,
-        (_, field) => escapeHTML(String(properties[field] ?? ''))
-    );
+    if (typeof layer.getLatLng === 'function') {
 
-    let html = '<div class="popup-content">';
+        const latlng = layer.getLatLng();
 
-    // Títol
-    if (title) {
-        html += `<h3>${title}</h3>`;
-    }
+        const targetZoom = Math.min(
+            Math.max(map.getZoom(), 17),
+            19
+        );
 
-    // Camps normals
-    (config.fields ?? []).forEach(item => {
+        map.flyTo(latlng, targetZoom, {
+            animate: true,
+            duration: 0.6
+        });
 
-        const value = properties[item.field] ?? '';
-
-        html += `
-            <div>
-                <strong>${escapeHTML(item.label)}:</strong>
-                ${escapeHTML(String(value))}
-            </div>
-        `;
-    });
-
-    // Documents
-    for (const item of config.documents ?? []) {
-
-        const filename = (item.filename ?? '')
-            .replaceAll('{quadre_id}', properties.quadre_id ?? '')
-            .replaceAll('{ritsic}', properties.ritsic ?? '');
-
-        if (!filename) continue;
-
-        html += `
-            <div>
-                <strong>${escapeHTML(item.label)}:</strong>
-                <a
-                    href="#"
-                    class="popup-document-link"
-                    data-storage="${escapeHTML(item.storage)}"
-                    data-filename="${escapeHTML(filename)}"
-                >
-                    ${escapeHTML(String(properties[item.field] ?? ''))}
-                </a>
-            </div>
-        `;
-    }
-
-    // Elements addicionals
-    (config.elements ?? []).forEach(element => {
-
-        if (element.type === 'buttons') {
-
-            const value = properties[element.field];
-
-            if (!value) return;
-
-            html += `<div class="${escapeHTML(element.class ?? '')}">`;
-
-            (element.buttons ?? []).forEach(button => {
-
-                const url = (element.url ?? '')
-                    .replaceAll('{value}', String(value).trim())
-                    .replaceAll('{message}', encodeURIComponent(button.message ?? ''));
-
-                html += `
-                    <a
-                        href="${escapeHTML(url)}"
-                        class="${escapeHTML(element.class_button ?? '')}"
-                    >
-                        ${escapeHTML(button.label ?? '')}
-                    </a>
-                `;
+        if (isMobile) {
+            map.once('moveend', () => {
+                map.panBy(
+                    [0, (cardHeight / 2) + 20],
+                    { animate: true, duration: 0.4 }
+                );
             });
+        }
 
-            html += '</div>';
+        return;
+    }
+
+    // =====================================================
+    // LÍNIES I POLÍGONS
+    // =====================================================
+
+    if (bounds?.isValid()) {
+
+        map.fitBounds(bounds, {
+            animate: true,
+            duration: 0.6,
+            maxZoom: 17,
+            paddingTopLeft: [24, 24],
+            paddingBottomRight: [
+                24,
+                isMobile ? cardHeight + 40 : 24
+            ]
+        });
+    }
+}
+
+// Clear selection
+function clearFeatureSelection() {
+
+    selectionToken++;
+
+    if (selectedLayer && selectedLayerRemoveHandler) {
+        selectedLayer.off('remove', selectedLayerRemoveHandler);
+    }
+
+    selectedLayer = null;
+    selectedLayerRemoveHandler = null;
+
+    const card = document.getElementById('map-feature-card');
+
+    if (card) {
+        card.hidden = true;
+        card.setAttribute('aria-hidden', 'true');
+    }
+}
+
+// Select feature
+export function selectFeature(layer, title, html, getExpedientUrl) {
+
+    if (selectedLayer === layer) return;
+
+    // Eliminar selecció anterior
+    clearFeatureSelection();
+
+    selectedLayer = layer;
+
+    const currentToken = selectionToken;
+
+    const card = document.getElementById('map-feature-card');
+    const titleElement = document.getElementById('map-feature-title');
+    const contentElement = document.getElementById('map-feature-content');
+
+    if (!card || !titleElement || !contentElement) return;
+
+    titleElement.innerHTML = title;
+    contentElement.innerHTML = html;
+
+    card.hidden = false;
+    card.setAttribute('aria-hidden', 'false');
+
+    // Tancar si la feature desapareix del mapa
+    selectedLayerRemoveHandler = () => {
+        if (selectedLayer === layer) {
+            clearFeatureSelection();
+        }
+    };
+
+    layer.on('remove', selectedLayerRemoveHandler);
+
+    // Zoom i centratge
+    requestAnimationFrame(() => {
+        if (selectedLayer === layer) {
+            focusFeatureOnMap(layer, card);
         }
     });
 
-    html += '</div>';
+    // Carregar documents
+    const links = contentElement.querySelectorAll('.popup-document-link');
 
-    layer.bindPopup(html);
+    links.forEach(async link => {
 
-    // Carregar documents des de Storage
-    layer.on('popupopen', async event => {
+        link.addEventListener('click', e => {
+            if (!link.dataset.ready) e.preventDefault();
+        });
 
-        const links = event.popup.getElement()
-            ?.querySelectorAll('.popup-document-link');
+        const url = await getExpedientUrl(
+            link.dataset.storage,
+            link.dataset.filename
+        );
 
-        if (!links) return;
+        if (
+            currentToken !== selectionToken ||
+            !link.isConnected
+        ) return;
 
-        for (const link of links) {
-
-            link.addEventListener('click', e => {
-                if (!link.dataset.ready) e.preventDefault();
-            });
-
-            const url = await getExpedientUrl(
-                link.dataset.storage,
-                link.dataset.filename
-            );
-
-            if (!url) {
-                link.textContent = 'Document no disponible';
-                continue;
-            }
-
-            link.href = url;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            link.dataset.ready = 'true';
+        if (!url) {
+            link.textContent = 'Document no disponible';
+            link.removeAttribute('href');
+            return;
         }
+
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.dataset.ready = 'true';
     });
 }
+
+function initializeMapSelectionEvents() {
+
+    if (mapSelectionEventsInitialized) return;
+
+    map.on('click', event => {
+
+        const target = event.originalEvent?.target;
+
+        // No deseleccionar quan el clic prové d'una feature
+        if (target?.closest(
+            '.leaflet-interactive, .leaflet-marker-icon'
+        )) return;
+
+        clearFeatureSelection();
+    });
+
+    mapSelectionEventsInitialized = true;
+}
+
+// Floating card - close button
+function initializePopupClose() {
+
+    if (popupCloseInitialized) return;
+
+    const card = document.getElementById('map-feature-card');
+
+    if (!card) return;
+
+    const closeButton = card.querySelector('.map-feature-card__close');
+
+    if (!closeButton) return;
+
+    closeButton.addEventListener('click', clearFeatureSelection);
+
+    popupCloseInitialized = true;
+}
+
 // Escape HTML for security
 function escapeHTML(value) {
     return String(value).replace(/[&<>"']/g, char => ({
