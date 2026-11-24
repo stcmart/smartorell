@@ -1,0 +1,11 @@
+{
+    "id": "/smartorell/",
+    "name": "SMartorell",
+    "short_name": "SMartorell",
+    "start_url": "/index.html",
+    "scope": "https://stcmart.github.io/smartorell/",
+    "display": "standalone",
+    "orientation": "any",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff"
+}
