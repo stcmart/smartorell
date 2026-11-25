@@ -191,17 +191,32 @@ body {
         left: 12px;
     }
 
-    /* Pujar només els controls */
-    .leaflet-bottom {
-        bottom: 0;
-    }
-
     .map-info-control.leaflet-control .map-controls-toggle {
-        margin-bottom: calc(env(safe-area-inset-bottom, 0px) + 2%);
+        margin-bottom: calc(env(safe-area-inset-bottom, 0px) + 3%);
+        margin-right: calc(env(safe-area-inset-right, 0px) + 3%);
+        margin-left: calc(env(safe-area-inset-left, 0px) + 3%);
     }
 }
 
 @media (display-mode: standalone) {
+    @supports (-webkit-backdrop-filter: blur(10px)) {
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: env(safe-area-inset-top);
+            z-index: 999;
+            pointer-events: none;
+
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+
+            background: rgba(255, 255, 255, 0.12);
+        }
+    }
+
     #map {
         position: fixed;
         inset: 0;
