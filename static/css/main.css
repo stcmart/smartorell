@@ -199,7 +199,7 @@ body {
 }
 
 @media (display-mode: standalone) {
-    @supports (-webkit-backdrop-filter: blur(10px)) {
+    @supports (-webkit-backdrop-filter: blur(2%)) or (backdrop-filter: blur(2%)) {
         body::before {
             content: "";
             position: fixed;
@@ -210,8 +210,8 @@ body {
             z-index: 999;
             pointer-events: none;
 
-            -webkit-backdrop-filter: blur(12px);
-            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(2%);
+            backdrop-filter: blur(2%);
 
             background: rgba(255, 255, 255, 0.12);
         }
@@ -219,7 +219,6 @@ body {
 
     #map {
         position: fixed;
-        inset: 0;
         width: 100%;
         height: 100dvh;
     }
