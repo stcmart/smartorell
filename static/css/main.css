@@ -231,4 +231,22 @@ body {
     .app-header {
         padding-top: env(safe-area-inset-top, 0px);
     }
+
+        html {
+        background: red !important;
+    }
+
+    body {
+        background: blue !important;
+    }
+
+    #map {
+        background: lime !important;
+        outline: 3px solid magenta;
+    }
+
+    .leaflet-container {
+        background: orange !important;
+    }
+    
 }
