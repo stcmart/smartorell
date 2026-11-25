@@ -211,11 +211,17 @@ body {
         background: transparent !important;
     }
 
+    #map,
+    #map .leaflet-container,
+    #map .leaflet-map-pane {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
     #map {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: auto;
+        position: fixed !important;
+        inset: 0 !important;
+        height: auto !important;
     }
 
     #ios-top-blur {
