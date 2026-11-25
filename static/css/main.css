@@ -201,15 +201,19 @@ body {
     /* Mapa a pantalla completa */
     html,
     body {
+        position: fixed;
+        inset: 0;
         width: 100%;
-        height: auto;
+        height: 100%;
         margin: 0;
+        padding: 0;
         overflow: hidden;
-        background: transparent;
+        background: transparent !important;
     }
 
     #map {
         position: fixed;
+        inset: 0;
         width: 100%;
         height: auto;
     }
@@ -231,22 +235,4 @@ body {
     .app-header {
         padding-top: env(safe-area-inset-top, 0px);
     }
-
-        html {
-        background: red !important;
-    }
-
-    body {
-        background: blue !important;
-    }
-
-    #map {
-        background: lime !important;
-        outline: 3px solid magenta;
-    }
-
-    .leaflet-container {
-        background: orange !important;
-    }
-    
 }
