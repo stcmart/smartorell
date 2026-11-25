@@ -162,21 +162,17 @@ body {
 ======================================== */
 @media (max-width: 768px) {
 
-    .leaflet-bottom {
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
-    }
-    
     #sidebar {
         top: calc(env(safe-area-inset-top, 0px) + 12px);
         left: 12px;
         width: calc(100% - 50px);
-        max-height: calc(100vh - 24px);
+        max-height: calc(100dvh - 24px);
         border-radius: 20px;
     }
 
     .sidebar-toggle {
         position: fixed;
-        top: 10%;
+        top: calc(env(safe-area-inset-top, 0px) + 9%);
         left: calc(100% - 39px);
         right: auto;
         bottom: auto;
@@ -191,9 +187,17 @@ body {
         justify-content: center;
     }
 
-    /* Quan el sidebar està ocult */
     #sidebar.hidden ~ .sidebar-toggle {
         left: 12px;
+    }
+
+    /* Pujar només els controls */
+    .leaflet-bottom {
+        bottom: 0;
+    }
+
+    .leaflet-bottom .leaflet-control {
+        margin-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
     }
 }
 
